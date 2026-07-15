@@ -1,0 +1,396 @@
+/* ========================================================================
+   lofi-wire — component library
+   모든 와이어의 <style> 태그 안에 인라인으로 박는다.
+   금지: border-left 액센트 stripe (어떤 요소에도)
+   ======================================================================== */
+
+:root {
+  --ink: #1f2225;
+  --sub: #6b7177;
+  --line: #d7dbe0;
+  --line2: #e7eaee;
+  --bg: #f4f5f7;
+  --card: #fff;
+  --ph: #dde1e6;
+  --ph2: #e9ecf0;
+  --chip: #eef0f3;
+  --chipOn: #2b2f33;
+  --note: #f0f2f5;
+  --accent: #2f6fde;
+  --accentBg: #eaf1fc;
+  --pink: #ff4d8a;
+  --dark: #0d0e10;
+  --warn: #fdeecf;
+  --warnInk: #7a5a08;
+  --good: #e8f3ec;
+  --goodInk: #1f6b3a;
+  --bad: #fbeaea;
+  --badInk: #8a3a3a;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.5;
+}
+
+/* ============ Layout ============ */
+.page { max-width: 1240px; margin: 0 auto; padding: 32px 24px 80px; }
+.cols { display: flex; gap: 24px; flex-wrap: wrap; align-items: flex-start; }
+.col { flex: 1; min-width: 300px; }
+
+/* ============ Header / Meta ============ */
+h1 { font-size: 21px; margin: 0 0 4px; letter-spacing: -.01em; }
+.meta { font-size: 13px; color: var(--sub); margin-bottom: 6px; }
+.meta b { color: var(--ink); font-weight: 600; }
+.lofi-tag {
+  display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: .05em;
+  color: var(--sub); border: 1px solid var(--line); border-radius: 4px;
+  padding: 2px 7px; margin-left: 8px; vertical-align: middle;
+}
+.v-tag {
+  display: inline-block; font-size: 11px; font-weight: 700; background: var(--ink); color: #fff;
+  border-radius: 4px; padding: 2px 7px; margin-left: 6px; vertical-align: middle;
+}
+
+/* 문서 링크 칩 (헤더 영역) */
+.doc-chips { display: flex; gap: 6px; flex-wrap: wrap; margin: 8px 0 14px; }
+.doc-chip {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 11.5px; font-weight: 500; color: var(--ink);
+  background: var(--card); border: 1px solid var(--line); border-radius: 6px;
+  padding: 4px 9px; text-decoration: none; line-height: 1.3;
+}
+.doc-chip:hover { background: var(--accentBg); border-color: var(--accent); }
+.doc-chip::after { content: "↗"; font-size: 10px; color: var(--sub); margin-left: 2px; }
+
+/* 변경 노트 박스 (v2/v3 등) */
+.change-note {
+  background: var(--card); border: 1px solid var(--line); border-radius: 10px;
+  padding: 10px 14px; font-size: 12.5px; color: #3a3f44; margin: 14px 0 24px;
+}
+.change-note b { color: var(--ink); }
+
+/* 섹션 라벨 */
+.section-title { font-size: 14px; font-weight: 700; margin: 24px 0 12px; letter-spacing: -.005em; }
+.col-label {
+  font-size: 12px; font-weight: 700; color: var(--sub);
+  text-transform: uppercase; letter-spacing: .06em; margin: 0 0 10px;
+}
+.col-sub { font-size: 11.5px; color: var(--sub); margin: 0 0 10px; }
+
+/* ============ Device (Mobile Frame) ============ */
+.device {
+  background: var(--card); border: 1px solid var(--line); border-radius: 22px;
+  overflow: hidden; box-shadow: 0 6px 24px rgba(31, 34, 37, .06);
+  max-width: 380px; position: relative;
+}
+.statusbar {
+  height: 34px; background: #fbfbfc; border-bottom: 1px solid var(--line2);
+  display: flex; align-items: center; justify-content: center;
+}
+.statusbar span { width: 90px; height: 5px; border-radius: 3px; background: var(--ph); }
+.screen { padding: 0 0 14px; }
+
+/* 온보딩 위 dimmed context */
+.ctx { padding: 16px 16px 6px; opacity: .55; }
+.ctx .bar { height: 11px; border-radius: 6px; background: var(--ph2); margin-bottom: 8px; }
+.ctx .bar.w70 { width: 70%; }
+.ctx .bar.w50 { width: 50%; }
+.ctx .hero {
+  height: 74px; border-radius: 10px; background: var(--ph2); margin: 12px 0 6px;
+  display: flex; align-items: center; justify-content: center; color: var(--sub); font-size: 11px;
+}
+.ctx-cap { text-align: center; font-size: 10px; color: var(--sub); padding: 4px 0 2px; }
+.divider { height: 8px; background: var(--bg); }
+
+/* ============ Section Header / Sub ============ */
+.sec-head-wrap { padding: 14px 16px 0; }
+.sec-head { font-size: 15px; font-weight: 700; margin: 0 0 2px; }
+.sec-sub { font-size: 12px; color: var(--sub); margin: 0 0 12px; }
+
+/* ============ Module (지면4 패턴) ============ */
+.mod-row { padding: 14px 0 4px; }
+.mod-head {
+  padding: 0 16px; display: flex; align-items: flex-start;
+  justify-content: space-between; gap: 8px;
+}
+.mod-head .text { flex: 1; min-width: 0; }
+.mod-hook { font-size: 11.5px; color: var(--sub); margin-bottom: 2px; }
+.mod-title { font-size: 14.5px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
+.mod-title .logo,
+.mod-title .logo-mini {
+  width: 18px; height: 18px; border-radius: 4px; background: var(--ph);
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 8px; color: var(--sub);
+}
+.mod-arrow { font-size: 16px; color: var(--sub); padding-top: 2px; flex-shrink: 0; }
+
+/* ============ Carousel ============ */
+.carousel {
+  display: flex; gap: 8px; overflow-x: auto;
+  padding: 10px 16px 4px; scroll-snap-type: x mandatory;
+}
+.pcard { flex: 0 0 138px; scroll-snap-align: start; }
+.pcard.peek { opacity: .55; }
+.thumb {
+  width: 138px; height: 138px; border-radius: 10px;
+  background: repeating-linear-gradient(45deg,
+    var(--ph2), var(--ph2) 9px,
+    var(--ph) 9px, var(--ph) 10px);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--sub); font-size: 10px; margin-bottom: 6px; position: relative;
+}
+.pbrand { font-size: 10px; color: var(--sub); margin-bottom: 1px; line-height: 1.2; }
+.pname { font-size: 11.5px; line-height: 1.3; height: 28px; overflow: hidden; margin-bottom: 3px; }
+.price { font-size: 12px; font-weight: 700; margin-bottom: 6px; }
+.price-sub {
+  font-size: 9.5px; color: var(--warnInk); background: var(--warn);
+  display: inline-block; padding: 1px 4px; border-radius: 3px; margin-top: 2px;
+}
+.add-btn {
+  width: 100%; height: 28px; border-radius: 6px; background: #fff;
+  border: 1px solid var(--ink); font-size: 11px; font-weight: 600;
+  color: var(--ink); cursor: pointer;
+}
+.add-btn.solid { background: var(--ink); color: #fff; }
+
+/* ============ Chips ============ */
+.chips {
+  display: flex; gap: 7px; overflow-x: auto;
+  padding: 4px 16px 10px; margin-bottom: 4px;
+}
+.chip {
+  flex: 0 0 auto; font-size: 12.5px; padding: 7px 13px; border-radius: 18px;
+  background: var(--chip); color: var(--sub); white-space: nowrap;
+  border: 1px solid transparent;
+}
+.chip.on { background: var(--chipOn); color: #fff; font-weight: 600; }
+
+/* ============ Snackbar ============ */
+.snackbar {
+  position: absolute; left: 12px; right: 12px; bottom: 14px;
+  background: #1f2225; color: #fff; border-radius: 10px; padding: 10px 12px;
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  font-size: 12.5px; box-shadow: 0 6px 24px rgba(0, 0, 0, .18);
+}
+.snackbar .ic { width: 20px; height: 20px; border-radius: 5px; background: #3a3f44; flex-shrink: 0; }
+.snackbar-text { flex: 1; }
+.snackbar-cta { font-weight: 700; color: #9fc3ff; font-size: 12.5px; white-space: nowrap; }
+
+/* ============ Mode banner (PLP 상단 안내) ============ */
+.modebanner {
+  background: var(--accentBg); border-radius: 10px; padding: 10px 12px;
+  font-size: 12px; color: #234a86; margin: 2px 0 12px;
+  display: flex; align-items: center; gap: 8px;
+}
+.modebanner .ic { width: 18px; height: 18px; border-radius: 5px; background: #cfe0fb; flex-shrink: 0; }
+.modebanner b { color: #1c3e72; }
+.modebanner.none {
+  background: var(--note); color: var(--sub); justify-content: center;
+  font-style: italic; border: 1px dashed var(--line);
+}
+
+/* ============ Annotation (주석 박스) ============ */
+.anno {
+  background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+  padding: 14px 16px; margin-bottom: 14px;
+}
+.anno h3 {
+  font-size: 13px; margin: 0 0 8px;
+  display: flex; align-items: center; gap: 7px;
+}
+.anno h3 .n {
+  font-size: 10px; font-weight: 700; background: var(--ink); color: #fff;
+  border-radius: 5px; padding: 2px 6px; letter-spacing: .03em;
+}
+.anno ul { margin: 0; padding-left: 18px; font-size: 12.5px; color: #3a3f44; }
+.anno li { margin-bottom: 5px; }
+.anno li b { color: var(--ink); }
+
+/* ============ Pill labels (내부 모드 전용) ============ */
+.pill {
+  display: inline-block; font-size: 10.5px; font-weight: 600;
+  background: var(--chip); color: var(--sub);
+  border-radius: 5px; padding: 1px 6px; margin: 0 1px;
+}
+.pill.new { background: var(--accentBg); color: #234a86; }
+.pill.kept { background: var(--good); color: var(--goodInk); }
+.pill.drop { background: #f0f2f5; color: var(--sub); text-decoration: line-through; }
+.pill.cf { background: var(--bad); color: var(--badInk); }
+.pill.dec { background: var(--warn); color: var(--warnInk); }
+.pill.confirmed { background: var(--good); color: var(--goodInk); }
+
+/* ============ KV (Dark Hero) ============ */
+.kv {
+  background: var(--dark); color: #fff;
+  padding: 50px 24px 60px; text-align: center;
+}
+.kv-chip {
+  display: inline-block; background: #22242a; color: #fff;
+  font-size: 12px; padding: 4px 12px; border-radius: 14px; margin-bottom: 20px;
+}
+.kv-title {
+  font-size: 30px; font-weight: 800; letter-spacing: -.01em; margin: 0 0 30px;
+}
+.kv-title .hl { color: var(--pink); position: relative; }
+.kv-title .hl::after {
+  content: ""; position: absolute; left: -4px; right: -4px; bottom: -2px;
+  height: 8px; background: var(--pink); opacity: .35; border-radius: 2px; z-index: -1;
+}
+.kv-card {
+  display: inline-flex; align-items: center; gap: 14px;
+  background: #fff; color: var(--ink); padding: 14px 22px;
+  border-radius: 12px; margin-bottom: 18px; text-align: left;
+}
+.kv-card-thumb { width: 48px; height: 48px; border-radius: 8px; background: var(--ph); }
+.kv-card-name { font-size: 13px; color: var(--sub); margin-bottom: 2px; }
+.kv-card-cat { font-size: 11px; color: var(--sub); margin-bottom: 6px; }
+.kv-card-price { font-size: 20px; font-weight: 800; }
+.kv-cta {
+  display: inline-block; background: var(--accent); color: #fff; border: 0;
+  padding: 14px 60px; border-radius: 10px; font-size: 15px; font-weight: 700;
+  margin-top: 14px; cursor: pointer;
+}
+
+/* ============ Steps (사용법 N단계) ============ */
+.steps {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 24px; max-width: 980px; margin: 0 auto;
+}
+.step {
+  background: var(--card); border: 1px solid var(--line); border-radius: 14px;
+  padding: 22px; text-align: center;
+}
+.step-num {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--ink); color: #fff; font-size: 13px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center; margin: 0 auto 14px;
+}
+.step-title { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+.step-desc { font-size: 12px; color: var(--sub); margin-bottom: 14px; }
+.step-img {
+  background: var(--ph2); border: 1px dashed var(--line); border-radius: 10px;
+  aspect-ratio: 4/3; display: flex; align-items: center; justify-content: center;
+  color: var(--sub); font-size: 11px; padding: 8px; text-align: center;
+}
+.step-img b { color: var(--ink); }
+
+/* ============ F2C5 / 조건 보드 ============ */
+.f2c5-board {
+  max-width: 760px; margin: 0 auto;
+  background: var(--card); border: 1px solid var(--line); border-radius: 14px;
+  padding: 32px; display: flex; gap: 40px;
+  align-items: center; justify-content: center;
+}
+.cond { flex: 1; text-align: center; }
+.cond-num { font-size: 48px; font-weight: 800; color: var(--accent); line-height: 1; margin-bottom: 8px; }
+.cond-label { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+.cond-desc { font-size: 12px; color: var(--sub); }
+.cond-divider { width: 1px; background: var(--line2); align-self: stretch; }
+.cat-icons {
+  display: flex; justify-content: center; gap: 10px;
+  margin-top: 24px; flex-wrap: wrap;
+}
+.cat-icon {
+  width: 48px; height: 48px; border-radius: 50%; background: var(--ph);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--sub); font-size: 10px;
+}
+.cat-icon span { font-size: 18px; }
+
+/* ============ Brand row (로고 가로 배치) ============ */
+.brand-row {
+  display: flex; justify-content: center; gap: 24px;
+  flex-wrap: wrap; margin-top: 14px;
+}
+.brand-logo {
+  width: 90px; height: 54px; background: #fff; border: 1px solid var(--line);
+  border-radius: 10px; display: flex; align-items: center; justify-content: center;
+  font-weight: 700; color: var(--sub); font-size: 13px;
+}
+.brand-plus { display: flex; align-items: center; color: var(--sub); font-size: 18px; font-weight: 600; }
+.brand-line { text-align: center; margin-top: 18px; font-size: 14px; color: var(--ink); }
+.brand-line b { color: var(--accent); }
+
+/* ============ Logo carousel (OPT 2) ============ */
+.logo-carousel { display: flex; gap: 10px; overflow-x: auto; padding: 6px 16px 10px; }
+.logo-item { flex: 0 0 auto; text-align: center; }
+.logo-circle {
+  width: 56px; height: 56px; border-radius: 50%;
+  background: var(--ph); display: flex; align-items: center; justify-content: center;
+  color: var(--sub); font-size: 11px; font-weight: 700;
+  margin-bottom: 4px; border: 1px solid var(--line2);
+}
+.logo-circle.on { border: 2px solid var(--ink); }
+.logo-name { font-size: 10.5px; color: var(--sub); max-width: 64px; }
+
+/* ============ Empty state ============ */
+.empty-box {
+  background: var(--note); border: 1px dashed var(--line); border-radius: 12px;
+  padding: 32px 20px; text-align: center;
+}
+.empty-icon { font-size: 36px; margin-bottom: 10px; }
+.empty-msg { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+.empty-sub { font-size: 11.5px; color: var(--sub); margin-bottom: 14px; }
+.empty-actions { display: flex; flex-direction: column; gap: 8px; }
+.empty-btn {
+  padding: 10px; border-radius: 8px; font-size: 12px; font-weight: 600;
+  border: 1px solid var(--ink); background: #fff; color: var(--ink);
+}
+.empty-btn.solid { background: var(--ink); color: #fff; }
+
+/* ============ Compare matrix ============ */
+.compare { width: 100%; border-collapse: collapse; font-size: 12px; }
+.compare th,
+.compare td { border: 1px solid var(--line2); padding: 7px 9px; text-align: left; vertical-align: top; }
+.compare th { background: var(--note); color: var(--sub); font-weight: 600; font-size: 11.5px; }
+.compare td b { color: var(--ink); }
+
+/* ============ DIFF matrix (버전 비교) ============ */
+.diff-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 4px; }
+.diff-table th,
+.diff-table td { border: 1px solid var(--line2); padding: 5px 7px; text-align: left; vertical-align: top; }
+.diff-table th { background: var(--note); color: var(--sub); font-weight: 600; font-size: 11px; }
+.diff-table td.was { color: var(--sub); text-decoration: line-through; }
+.diff-table td.now { color: var(--ink); font-weight: 500; }
+
+/* ============ Verdict (Bad / Good 케이스 결론) ============ */
+.verdict { margin-top: 14px; padding: 12px 14px; border-radius: 8px; font-size: 13px; }
+.verdict.bad { background: var(--bad); color: var(--badInk); }
+.verdict.good { background: var(--good); color: var(--goodInk); }
+.verdict b { font-weight: 700; }
+
+/* ============ Bottom CTA ============ */
+.bot-cta-wrap {
+  text-align: center; padding: 50px 24px;
+  background: #fff; border: 1px solid var(--line); border-top: 0;
+  border-radius: 0 0 10px 10px;
+}
+.bot-cta {
+  background: var(--accent); color: #fff; border: 0;
+  padding: 16px 80px; border-radius: 10px;
+  font-size: 16px; font-weight: 700; cursor: pointer;
+}
+
+/* ============ Footnote ============ */
+.footnote {
+  font-size: 11.5px; color: var(--sub); margin-top: 24px;
+  border-top: 1px solid var(--line); padding-top: 14px;
+}
+.footnote b { color: var(--ink); }
+
+/* ============ Sections (PC 풀 페이지) ============ */
+.sec {
+  padding: 60px 24px; background: #fff;
+  border-left: 1px solid var(--line); border-right: 1px solid var(--line);
+}
+.sec.alt { background: #fafbfc; }
+.sec-head { text-align: center; margin-bottom: 32px; }
+.sec-title { font-size: 22px; font-weight: 800; margin: 0; letter-spacing: -.01em; }
+.sec-title .hl { color: var(--accent); }

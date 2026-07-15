@@ -1,0 +1,77 @@
+{
+  "_comment": "lofi-wire masking patterns. scripts/mask.py가 이 파일을 읽는다. 추가 시 references/masking-rules.md도 같이 업데이트.",
+  "_customize": "internal_names / internal_metrics / real_prices_from_capture / internal_codenames 카테고리는 팀·프로젝트마다 다르다. 본인 팀 구성원 이름과 프로젝트 코드네임으로 채워서 쓸 것. internal_emails / internal_urls / jira_experiment_keys 는 회사 공통 도메인·Jira 프로젝트 키라 그대로 써도 됨.",
+  "_version": "2026-07-15",
+  "patterns": [
+    {
+      "category": "internal_names",
+      "_customize": "본인 프로젝트 팀 구성원 이름 → 역할명으로 채울 것. 아래는 표기 예시.",
+      "rules": [
+        { "pattern": "\\bPD\\s*님|PD(?=\\s|$|,|\\.|!|\\?|:|;)", "replace": "PD" }
+      ]
+    },
+    {
+      "category": "internal_emails",
+      "rules": [
+        { "pattern": "\\b[A-Za-z0-9._%+-]+@bucketplace\\.net\\b", "replace": "" },
+        { "pattern": "\\b[A-Za-z0-9._%+-]+@dailyhou\\.se\\b", "replace": "" }
+      ]
+    },
+    {
+      "category": "internal_urls",
+      "rules": [
+        { "pattern": "https?://[^\\s\"'<>]*\\.bucketplace\\.net[^\\s\"'<>]*", "replace": "" },
+        { "pattern": "https?://xpc\\.dailyhou\\.se[^\\s\"'<>]*", "replace": "" },
+        { "pattern": "https?://[^\\s\"'<>]*\\.datahou\\.se[^\\s\"'<>]*", "replace": "" },
+        { "pattern": "https?://(?:www\\.)?notion\\.so/ohouse/[^\\s\"'<>]*", "replace": "[내부 문서]" },
+        { "pattern": "https?://ohou-se\\.slack\\.com/[^\\s\"'<>]*", "replace": "" },
+        { "pattern": "https?://ohouse\\.atlassian\\.net/[^\\s\"'<>]*", "replace": "" },
+        { "pattern": "https?://(?:www\\.)?figma\\.com/design/[^\\s\"'<>]*", "replace": "" },
+        { "pattern": "https?://docs\\.google\\.com/(?:spreadsheets|document|presentation|forms)/[^\\s\"'<>]*", "replace": "" },
+        { "pattern": "https?://prod-files-secure\\.s3\\.[^\\s\"'<>]*", "replace": "" }
+      ]
+    },
+    {
+      "category": "jira_experiment_keys",
+      "rules": [
+        { "pattern": "\\b(?:COMMPL|COMMPO|OHSAND|OHSIOS|COMMWEB|CONTWEB|CONTPL)-\\d+\\b", "replace": "[티켓]" },
+        { "pattern": "\\bXPC\\s*\\d{3,5}\\b", "replace": "[실험키]" }
+      ]
+    },
+    {
+      "category": "internal_metrics",
+      "_customize": "본인 프로젝트의 실측 지표 패턴을 추가할 것. CTR은 범용이라 기본 포함.",
+      "rules": [
+        { "pattern": "user CTR \\d+(?:\\.\\d+)?%", "replace": "user CTR +N%" },
+        { "pattern": "GMV(?:\\s+per\\s+customer)?\\s*[+-]?\\s*\\d+(?:,\\d{3})*(?:\\.\\d+)?\\s*(?:원|%)?", "replace": "GMV ±N%" }
+      ]
+    },
+    {
+      "category": "real_prices_from_capture",
+      "_note": "캡처 인용으로 들어온 정확한 금액만 더미로. 이미 더미인 89,000원 같은 둥근 수는 유지. 프로젝트별로 자주 나오는 실측 가격이 있으면 여기 규칙을 추가.",
+      "rules": []
+    },
+    {
+      "category": "internal_codenames",
+      "_customize": "본인 프로젝트의 내부 코드네임·약어를 추가할 것. 반기 코드(25H1/26H2 등)는 범용이라 기본 포함.",
+      "rules": [
+        { "pattern": "\\b25H[12]\\b|\\b26H[12]\\b", "replace": "" }
+      ],
+      "_note": "공개 기능명은 유지. 내부 코드네임만 일반화."
+    },
+    {
+      "category": "kv_social_proof",
+      "rules": [
+        { "pattern": "\\b[a-z]{2}\\*{3,}\\s*님(?:의)?\\s*(?:패키지|구매)\\b", "replace": "u****님 구매" }
+      ]
+    }
+  ],
+  "preserve": [
+    "오늘의집",
+    "ODS",
+    "Pretendard",
+    "Apple SD Gothic Neo",
+    "삼성", "LG", "한샘", "시디즈"
+  ],
+  "footnote_append": "공유용 — 민감 정보 마스킹됨. 카피·색·데이터 더미. 내부 SSOT와 다를 수 있음."
+}

@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>글린다 온보딩 — 라이트화 구조 제안</title>
+<style>
+  :root{
+    --ink:#1f2225; --sub:#6b7177; --line:#d7dbe0; --line2:#e7eaee;
+    --bg:#f4f5f7; --card:#fff; --ph:#dde1e6; --ph2:#e9ecf0;
+    --note:#f0f2f5; --accent:#3b8aff; --accentDark:#1f4fb3;
+    --pink:#ff4d8a; --dark:#0d0e10;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Pretendard",sans-serif;
+    -webkit-font-smoothing:antialiased;line-height:1.5;}
+  .page{max-width:1200px;margin:0 auto;padding:32px 24px 80px;}
+  h1{font-size:21px;margin:0 0 4px;letter-spacing:-.01em;}
+  .meta{font-size:13px;color:var(--sub);margin-bottom:20px;}
+  .lofi-tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.05em;
+    color:var(--sub);border:1px solid var(--line);border-radius:4px;padding:2px 7px;margin-left:8px;vertical-align:middle;}
+
+  /* GNB (그냥 자리만) */
+  .gnb{background:#fff;border:1px solid var(--line);border-radius:10px 10px 0 0;padding:14px 24px;display:flex;align-items:center;gap:24px;font-size:13px;color:var(--sub);}
+  .gnb .logo{font-weight:700;color:var(--ink);font-size:15px;}
+  .gnb .on{color:var(--accent);font-weight:600;}
+
+  /* KV (다크) */
+  .kv{background:var(--dark);color:#fff;padding:50px 24px 60px;text-align:center;}
+  .kv-chip{display:inline-block;background:#22242a;color:#fff;font-size:12px;padding:4px 12px;border-radius:14px;margin-bottom:20px;}
+  .kv-chip::before{content:"📦 ";}
+  .kv-title{font-size:30px;font-weight:800;letter-spacing:-.01em;margin:0 0 30px;}
+  .kv-title .hl{color:var(--pink);position:relative;}
+  .kv-title .hl::after{content:"";position:absolute;left:-4px;right:-4px;bottom:-2px;height:8px;background:var(--pink);opacity:.35;border-radius:2px;z-index:-1;}
+  .kv-card{display:inline-flex;align-items:center;gap:14px;background:#fff;color:var(--ink);padding:14px 22px;border-radius:12px;margin-bottom:18px;text-align:left;}
+  .kv-card-thumb{width:48px;height:48px;border-radius:8px;background:var(--ph);position:relative;}
+  .kv-card-thumb::after{content:"5";position:absolute;left:-6px;top:-6px;background:var(--pink);color:#fff;font-size:10px;font-weight:700;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;}
+  .kv-card-name{font-size:13px;color:var(--sub);margin-bottom:2px;}
+  .kv-card-cat{font-size:11px;color:var(--sub);margin-bottom:6px;}
+  .kv-card-price{font-size:20px;font-weight:800;}
+  .kv-cta{display:inline-block;background:var(--accent);color:#fff;border:0;padding:14px 60px;border-radius:10px;font-size:15px;font-weight:700;margin-top:14px;cursor:pointer;}
+  .kv-tag{display:inline-block;margin-left:10px;font-size:11px;color:var(--pink);font-weight:700;border:1px solid var(--pink);padding:1px 6px;border-radius:4px;vertical-align:middle;}
+
+  /* 섹션 헤더 */
+  .sec{padding:60px 24px;background:#fff;border-left:1px solid var(--line);border-right:1px solid var(--line);}
+  .sec.alt{background:#fafbfc;}
+  .sec-head{text-align:center;margin-bottom:32px;}
+  .sec-sub{font-size:13px;color:var(--sub);margin-bottom:6px;}
+  .sec-title{font-size:22px;font-weight:800;margin:0;letter-spacing:-.01em;}
+  .sec-title .hl{color:var(--accent);}
+
+  /* 섹션 1 — F2C5 조건 */
+  .f2c5-board{max-width:760px;margin:0 auto;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:32px;display:flex;gap:40px;align-items:center;justify-content:center;}
+  .cond{flex:1;text-align:center;}
+  .cond-num{font-size:48px;font-weight:800;color:var(--accent);line-height:1;margin-bottom:8px;}
+  .cond-label{font-size:14px;font-weight:700;margin-bottom:4px;}
+  .cond-desc{font-size:12px;color:var(--sub);}
+  .cond-divider{width:1px;background:var(--line2);align-self:stretch;}
+  .cat-icons{display:flex;justify-content:center;gap:10px;margin-top:24px;flex-wrap:wrap;}
+  .cat-icon{width:48px;height:48px;border-radius:50%;background:var(--ph);
+    display:flex;align-items:center;justify-content:center;color:var(--sub);font-size:10px;}
+  .cat-icon span{font-size:18px;}
+
+  /* 섹션 2 — 브랜드 자유 */
+  .brand-row{display:flex;justify-content:center;gap:24px;flex-wrap:wrap;margin-top:14px;}
+  .brand-logo{width:90px;height:54px;background:#fff;border:1px solid var(--line);border-radius:10px;
+    display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--sub);font-size:13px;}
+  .brand-plus{display:flex;align-items:center;color:var(--sub);font-size:18px;font-weight:600;}
+  .brand-line{text-align:center;margin-top:18px;font-size:14px;color:var(--ink);}
+  .brand-line b{color:var(--accent);}
+
+  /* 섹션 3 — 사용법 3단계 */
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;max-width:980px;margin:0 auto;}
+  .step{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px;text-align:center;}
+  .step-num{width:28px;height:28px;border-radius:50%;background:var(--ink);color:#fff;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;}
+  .step-title{font-size:15px;font-weight:700;margin-bottom:6px;}
+  .step-desc{font-size:12px;color:var(--sub);margin-bottom:14px;}
+  .step-img{background:var(--ph2);border:1px dashed var(--line);border-radius:10px;aspect-ratio:4/3;
+    display:flex;align-items:center;justify-content:center;color:var(--sub);font-size:11px;
+    padding:8px;text-align:center;}
+  .step-img b{color:var(--ink);}
+
+  /* 섹션 4 — 최저가 한 줄 */
+  .price-line{max-width:760px;margin:0 auto;text-align:center;padding:24px;background:var(--card);border:1px solid var(--line);border-radius:14px;}
+  .price-line .em{color:var(--accent);font-weight:700;}
+
+  /* 하단 CTA */
+  .bot-cta-wrap{text-align:center;padding:50px 24px;background:#fff;border:1px solid var(--line);border-top:0;border-radius:0 0 10px 10px;}
+  .bot-cta{background:var(--accent);color:#fff;border:0;padding:16px 80px;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer;}
+
+  /* 안내 박스 */
+  .anno{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 18px;margin-top:20px;}
+  .anno h3{font-size:13px;margin:0 0 8px;display:flex;align-items:center;gap:7px;}
+  .anno h3 .n{font-size:10px;font-weight:700;background:var(--ink);color:#fff;
+    border-radius:5px;padding:2px 6px;letter-spacing:.03em;}
+  .anno ul{margin:0;padding-left:18px;font-size:12.5px;color:#3a3f44;}
+  .anno li{margin-bottom:4px;}
+  .anno li b{color:var(--ink);}
+  .pill{display:inline-block;font-size:10.5px;font-weight:600;background:var(--note);
+    color:var(--sub);border-radius:5px;padding:1px 6px;margin:0 1px;}
+  .pill.new{background:#eaf1fc;color:#1f4fb3;}
+  .pill.kept{background:#e8f3ec;color:#1f6b3a;}
+  .pill.drop{background:#f0f2f5;color:var(--sub);text-decoration:line-through;}
+
+  /* Empty 가이드 (별도 패널) */
+  .empty-section{margin-top:40px;}
+  .empty-row{display:flex;gap:24px;align-items:flex-start;}
+  .empty-device{flex:0 0 320px;background:#fff;border:1px solid var(--line);border-radius:20px;overflow:hidden;}
+  .empty-statusbar{height:34px;background:#fbfbfc;border-bottom:1px solid var(--line2);display:flex;align-items:center;justify-content:center;}
+  .empty-statusbar span{width:90px;height:5px;border-radius:3px;background:var(--ph);}
+  .empty-screen{padding:16px;}
+  .empty-screen-head{font-size:14px;font-weight:700;margin-bottom:14px;text-align:center;}
+  .empty-box{background:var(--note);border:1px dashed var(--line);border-radius:12px;padding:32px 20px;text-align:center;}
+  .empty-icon{font-size:36px;margin-bottom:10px;}
+  .empty-msg{font-size:13px;font-weight:600;margin-bottom:4px;}
+  .empty-sub{font-size:11.5px;color:var(--sub);margin-bottom:14px;}
+  .empty-actions{display:flex;flex-direction:column;gap:8px;}
+  .empty-btn{padding:10px;border-radius:8px;font-size:12px;font-weight:600;border:1px solid var(--ink);background:#fff;color:var(--ink);}
+  .empty-btn.solid{background:var(--ink);color:#fff;}
+  .empty-info{flex:1;}
+
+  .footnote{font-size:11.5px;color:var(--sub);margin-top:28px;border-top:1px solid var(--line);padding-top:14px;}
+  .footnote b{color:var(--ink);}
+</style>
+</head>
+<body>
+<div class="page">
+  <h1>글린다 온보딩 — 라이트화 구조 제안<span class="lofi-tag">LO-FI</span></h1>
+  <div class="meta">새 KV(평균 10만원 앵커 + 실제 패키지 카드) + 하단 라이트화 + Empty 가이드</div>
+
+  <!-- GNB -->
+  <div class="gnb">
+    <span class="logo">오늘의집</span>
+    <span>커뮤니티</span>
+    <span class="on">쇼핑</span>
+    <span>인테리어/생활</span>
+  </div>
+
+  <!-- KV (PD 새 시안 그대로) -->
+  <div class="kv">
+    <span class="kv-chip">패키지할인</span>
+    <h2 class="kv-title">
+      한 번에 구매하면 <span class="hl">평균 10만원</span> 추가 할인
+    </h2>
+    <div class="kv-card">
+      <div class="kv-card-thumb"></div>
+      <div>
+        <div class="kv-card-name">u****님 패키지</div>
+        <div class="kv-card-cat">총 5개 카테고리 구성</div>
+        <div class="kv-card-price">890,000원</div>
+      </div>
+    </div>
+    <div>
+      <button class="kv-cta">패키지 할인 받기</button>
+    </div>
+  </div>
+
+  <!-- ===== 섹션 1: F2C5 조건 ===== -->
+  <div class="sec">
+    <div class="sec-head">
+      <div class="sec-sub">할인받는 조건</div>
+      <h3 class="sec-title">이렇게 담으면 <span class="hl">패키지 할인</span></h3>
+    </div>
+    <div class="f2c5-board">
+      <div class="cond">
+        <div class="cond-num">2</div>
+        <div class="cond-label">가구 카테고리</div>
+        <div class="cond-desc">침대, 소파, 책상 등</div>
+      </div>
+      <div class="cond-divider"></div>
+      <div class="cond">
+        <div class="cond-num">5</div>
+        <div class="cond-label">총 카테고리</div>
+        <div class="cond-desc">가구 2개 포함 5개 이상</div>
+      </div>
+    </div>
+    <div class="cat-icons">
+      <div class="cat-icon"><span>🛏️</span></div>
+      <div class="cat-icon"><span>🛋️</span></div>
+      <div class="cat-icon"><span>📺</span></div>
+      <div class="cat-icon"><span>💡</span></div>
+      <div class="cat-icon"><span>🍳</span></div>
+      <div class="cat-icon" style="background:var(--note);">+47</div>
+    </div>
+    <p style="text-align:center;font-size:12px;color:var(--sub);margin-top:8px;">총 52개 카테고리에서 골라 담을 수 있어요</p>
+  </div>
+
+  <!-- ===== 섹션 2: 브랜드 자유 ===== -->
+  <div class="sec alt">
+    <div class="sec-head">
+      <div class="sec-sub">오늘의집만 가능</div>
+      <h3 class="sec-title">어떤 브랜드든 <span class="hl">자유롭게 조합</span></h3>
+    </div>
+    <div class="brand-row">
+      <div class="brand-logo">SAMSUNG</div>
+      <div class="brand-plus">+</div>
+      <div class="brand-logo">LG</div>
+      <div class="brand-plus">+</div>
+      <div class="brand-logo">한샘</div>
+      <div class="brand-plus">+</div>
+      <div class="brand-logo">시디즈</div>
+    </div>
+    <p class="brand-line">삼성 가전 + 한샘 가구도 <b>한 패키지로</b></p>
+  </div>
+
+  <!-- ===== 섹션 3: 사용법 3단계 ===== -->
+  <div class="sec">
+    <div class="sec-head">
+      <div class="sec-sub">사용법</div>
+      <h3 class="sec-title">3단계로 끝나요</h3>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-title">상품 담기</div>
+        <div class="step-desc">PDP에서 "패키지 담기" 버튼 또는 장바구니/스크랩에서</div>
+        <div class="step-img">
+          <div>
+            <div style="font-size:24px;margin-bottom:4px;">📱</div>
+            <b>PDP 패키지 담기 버튼</b> 이미지
+          </div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-title">패키지에서 조합</div>
+        <div class="step-desc">담은 상품을 가구 2개 + 카테고리 5개로 조합</div>
+        <div class="step-img">
+          <div>
+            <div style="font-size:24px;margin-bottom:4px;">🧩</div>
+            <b>패키지 화면 조합</b> 이미지
+          </div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-title">할인받고 구매</div>
+        <div class="step-desc">조건 충족하면 자동으로 할인가 적용</div>
+        <div class="step-img">
+          <div>
+            <div style="font-size:24px;margin-bottom:4px;">💰</div>
+            <b>할인가 + 구매</b> 이미지
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 섹션 4: 최저가 한 줄 (라이트) ===== -->
+  <div class="sec alt">
+    <div class="price-line">
+      💡 패키지 할인가는 <span class="em">온라인 최저가 수준</span>으로 제공돼요
+    </div>
+  </div>
+
+  <!-- 하단 CTA -->
+  <div class="bot-cta-wrap">
+    <button class="bot-cta">나만의 패키지 만들기</button>
+  </div>
+
+  <!-- ===== 주석 ===== -->
+  <div class="anno" style="margin-top:32px;">
+    <h3><span class="n">A1</span> 새 구조 — 무엇이 살고 무엇이 빠졌나</h3>
+    <ul>
+      <li><span class="pill new">NEW</span> 상단 KV — 평균 10만원 앵커 + 실제 패키지 카드 (구체화)</li>
+      <li><span class="pill kept">KEPT</span> F2C5 조건 — *가구 2개* 명시 강화 (기존 묻혀있던 정보 → 별도 섹션)</li>
+      <li><span class="pill new">NEW</span> 브랜드 자유 — <b>로고 이미지화</b> (PD ③ 반영). 텍스트 나열 대신 시각</li>
+      <li><span class="pill kept">KEPT</span> 사용법 — <b>4단계 → 3단계 압축</b>. 1단계에 PDP 담기 버튼 이미지 (PD ②)</li>
+      <li><span class="pill kept">KEPT</span> 최저가 수준 — <b>한 줄로 라이트</b>화. 별도 큰 섹션 X</li>
+      <li><span class="pill drop">DROP</span> "일반 패키지 vs 오늘의집" 비교 영역 — 신규 유저에게 인지 부담, 통째 제거</li>
+      <li><span class="pill drop">DROP</span> 사용법 4단계 (할인가 확인) — 3번 안에 흡수</li>
+    </ul>
+  </div>
+
+  <!-- ===== Empty 가이드 (별도 패널) ===== -->
+  <div class="empty-section">
+    <h2 style="font-size:15px;margin:0 0 14px;">+ Empty 가이드 (PD ④번 — 패키지 화면 빈 상태)</h2>
+    <div class="empty-row">
+      <div class="empty-device">
+        <div class="empty-statusbar"><span></span></div>
+        <div class="empty-screen">
+          <div class="empty-screen-head">나만의 패키지</div>
+          <div class="empty-box">
+            <div class="empty-icon">📦</div>
+            <div class="empty-msg">아직 담은 상품이 없어요</div>
+            <div class="empty-sub">장바구니나 스크랩에서 가져오면<br>빠르게 시작할 수 있어요</div>
+            <div class="empty-actions">
+              <button class="empty-btn solid">장바구니에서 가져오기</button>
+              <button class="empty-btn">스크랩에서 가져오기</button>
+              <button class="empty-btn">상품 둘러보기</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="empty-info">
+        <div class="anno" style="margin:0;">
+          <h3><span class="n">E1</span> Empty 가이드 핵심</h3>
+          <ul>
+            <li>온보딩 페이지 CTA "패키지 할인 받기" → 빈 패키지 화면 진입 → <b>여기서 행동 못 하면 이탈</b></li>
+            <li><b>바로 행동 가능한 3개 진입점</b> 제공:
+              <ul>
+                <li><b>장바구니에서 가져오기</b> (가장 강함 — 이미 관심 표명한 상품)</li>
+                <li><b>스크랩에서 가져오기</b> (두 번째 — 관심 신호)</li>
+                <li><b>상품 둘러보기</b> (마지막 — 카테고리/홈 진입)</li>
+              </ul>
+            </li>
+            <li>"내 장바구니/스크랩에서 패키지 대상 상품 N개 발견"처럼 <b>구체 숫자 노출</b>은 임팩트 강화 옵션</li>
+            <li>온보딩 ↔ Empty가 <b>한 동선</b>이라는 점이 핵심. 두 화면을 같이 설계</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footnote">
+    <b>Lo-fi 목적</b>: 라이트화 후 구조·정보 위계 합의용. 실제 카피·색·아이콘·로고는 미확정. ·
+    <b>모바일 대응 필요</b>: 본 시안은 PC 기준. 모바일은 세로 스크롤 길이 한 번 더 점검 필요. ·
+    <b>실데이터 가정</b>: KV의 "u****님 패키지"는 실제 데이터 노출이라는 전제. 더미면 임팩트 약화.
+  <div style="margin-top:10px;padding:8px 12px;background:#fff8e1;border:1px solid #f0d469;border-radius:6px;font-size:11.5px;color:#7a5a08;">⚠️ 공유용 — 민감 정보 마스킹됨. 카피·색·데이터 더미. 내부 SSOT와 다를 수 있음.</div></div>
+</div>
+</body>
+</html>
