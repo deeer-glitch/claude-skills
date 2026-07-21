@@ -13,6 +13,7 @@
 | **spec-policy-handoff** | Figma 화면 구조 기반 핸드오프 주석 초안 생성 | `주석 써줘` / `spec 달아줘` | 콘텐츠 | ✅ 운영 중 |
 | **design-review** | 디자인 리뷰 워크플로 (페르소나→VOC→리뷰→스펙→크리틱) | `#페르소나` / `#유저보이스` / `#리뷰` / `#스펙` / `#크리틱` | 공통 | ✅ 운영 중 |
 | **user-voice** | 유대시 VOC 조회 및 디자인/기획 근거 활용 | `유저 의견 찾아줘` / `VOC 근거` | 공통 | ✅ 운영 중 |
+| **wording-check** | 내부 공유 글 다듬기 — 포맷은 유지하고 읽는 사람 기준으로 문장 교정, 프로덕트·오늘의집 용어 지향 | `워딩 점검해줘` / `글 다듬어줘` | 공통 | ✅ 운영 중 |
 
 > 도메인 컬럼은 스킬이 최적화된 도메인을 나타내요. 다른 도메인에서 사용할 때는 해당 도메인 케이스를 SKILL.md에 추가하면 품질이 올라갑니다.
 
@@ -30,6 +31,7 @@
 - spec-policy-handoff: ~/claude-skills/skills/spec-policy-handoff/SKILL.md
 - design-review: ~/claude-skills/skills/design-review/SKILL.md
 - user-voice: ~/claude-skills/skills/user-voice/SKILL.md
+- wording-check: ~/claude-skills/skills/wording-check/SKILL.md
 ```
 
 ### Cursor
