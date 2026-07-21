@@ -14,6 +14,7 @@
 | **design-review** | 디자인 리뷰 워크플로 (페르소나→VOC→리뷰→스펙→크리틱) | `#페르소나` / `#유저보이스` / `#리뷰` / `#스펙` / `#크리틱` | 공통 | ✅ 운영 중 |
 | **user-voice** | 유대시 VOC 조회 및 디자인/기획 근거 활용 | `유저 의견 찾아줘` / `VOC 근거` | 공통 | ✅ 운영 중 |
 | **lofi-wire** | Lo-fi 와이어프레임 HTML 생성 — 구조 합의·옵션 비교·개념 시각화·핸드오프 전 검토용. 그레이스케일 톤 + 공용 컴포넌트 라이브러리 자동 적용, 마스킹 후 개인 GitHub Pages로 공유 가능 | `와이어 만들어줘` / `lofi` / `구조 보여줘` / `옵션 비교` | 공통 | ✅ 운영 중 |
+| **wording-check** | 내부 공유 글 다듬기 — 포맷은 유지하고 읽는 사람 기준으로 문장 교정, 프로덕트·오늘의집 용어 지향 | `워딩 점검해줘` / `글 다듬어줘` | 공통 | ✅ 운영 중 |
 
 > 도메인 컬럼은 스킬이 최적화된 도메인을 나타내요. 다른 도메인에서 사용할 때는 해당 도메인 케이스를 SKILL.md에 추가하면 품질이 올라갑니다.
 
@@ -32,6 +33,7 @@
 - design-review: ~/claude-skills/skills/design-review/SKILL.md
 - user-voice: ~/claude-skills/skills/user-voice/SKILL.md
 - lofi-wire: ~/claude-skills/skills/lofi-wire/SKILL.md
+- wording-check: ~/claude-skills/skills/wording-check/SKILL.md
 ```
 
 ### Cursor
