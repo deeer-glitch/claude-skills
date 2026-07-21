@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Glinda 온보딩 브랜드 큐레이션 PLP — Lo-fi 와이어프레임 v3</title>
+<style>
+  :root{
+    --ink:#1f2225; --sub:#6b7177; --line:#d7dbe0; --line2:#e7eaee;
+    --bg:#f4f5f7; --card:#fff; --ph:#dde1e6; --ph2:#e9ecf0;
+    --chip:#eef0f3; --chipOn:#2b2f33; --note:#f0f2f5;
+    --accent:#2f6fde; --accentBg:#eaf1fc;
+    --warn:#fdeecf; --warnInk:#7a5a08;
+    --good:#e8f3ec; --goodInk:#1f6b3a;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Pretendard",sans-serif;
+    -webkit-font-smoothing:antialiased;line-height:1.5;}
+  .page{max-width:1320px;margin:0 auto;padding:32px 24px 80px;}
+  h1{font-size:21px;margin:0 0 4px;letter-spacing:-.01em;}
+  .meta{font-size:13px;color:var(--sub);margin-bottom:6px;}
+  .meta b{color:var(--ink);font-weight:600;}
+  .lofi-tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.05em;
+    color:var(--sub);border:1px solid var(--line);border-radius:4px;padding:2px 7px;margin-left:8px;vertical-align:middle;}
+  .v-tag{display:inline-block;font-size:11px;font-weight:700;background:var(--ink);color:#fff;
+    border-radius:4px;padding:2px 7px;margin-left:6px;vertical-align:middle;}
+
+  .change-note{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:10px 14px;font-size:12.5px;color:#3a3f44;margin:14px 0 24px;}
+  .change-note b{color:var(--ink);}
+
+  .section-title{font-size:14px;font-weight:700;margin:24px 0 12px;letter-spacing:-.005em;}
+
+  .cols{display:flex;gap:24px;flex-wrap:wrap;align-items:flex-start;}
+  .col{flex:1;min-width:300px;}
+  .col-label{font-size:12px;font-weight:700;color:var(--sub);text-transform:uppercase;
+    letter-spacing:.06em;margin:0 0 6px;}
+  .col-sub{font-size:11.5px;color:var(--sub);margin:0 0 10px;}
+  .opt-tag{display:inline-block;font-size:10px;font-weight:700;background:var(--accentBg);color:#234a86;
+    border-radius:4px;padding:2px 6px;margin-right:6px;vertical-align:middle;}
+
+  /* mobile frame */
+  .device{background:var(--card);border:1px solid var(--line);border-radius:22px;
+    overflow:hidden;box-shadow:0 6px 24px rgba(31,34,37,.06);max-width:360px;position:relative;}
+  .statusbar{height:34px;background:#fbfbfc;border-bottom:1px solid var(--line2);
+    display:flex;align-items:center;justify-content:center;}
+  .statusbar span{width:90px;height:5px;border-radius:3px;background:var(--ph);}
+  .screen{padding:0 0 14px;}
+
+  .ctx{padding:16px 16px 6px;opacity:.5;}
+  .ctx .bar{height:11px;border-radius:6px;background:var(--ph2);margin-bottom:8px;}
+  .ctx .bar.w70{width:70%;} .ctx .bar.w50{width:50%;}
+  .ctx .hero{height:60px;border-radius:10px;background:var(--ph2);margin:10px 0 6px;
+    display:flex;align-items:center;justify-content:center;color:var(--sub);font-size:10px;}
+  .ctx-cap{text-align:center;font-size:10px;color:var(--sub);padding:4px 0 2px;}
+  .divider{height:8px;background:var(--bg);}
+
+  .sec-head-wrap{padding:14px 16px 0;}
+  .sec-head{font-size:15px;font-weight:700;margin:0 0 2px;}
+  .sec-sub{font-size:11.5px;color:var(--sub);margin:0 0 12px;}
+
+  /* shared carousel */
+  .carousel{display:flex;gap:8px;overflow-x:auto;padding:10px 16px 4px;}
+  .pcard{flex:0 0 138px;}
+  .pcard.peek{opacity:.55;}
+  .thumb{width:138px;height:138px;border-radius:10px;background:
+      repeating-linear-gradient(45deg,var(--ph2),var(--ph2) 9px,var(--ph) 9px,var(--ph) 10px);
+    display:flex;align-items:center;justify-content:center;color:var(--sub);font-size:10px;
+    margin-bottom:6px;position:relative;}
+  .pbrand{font-size:10px;color:var(--sub);margin-bottom:1px;line-height:1.2;}
+  .pname{font-size:11.5px;line-height:1.3;height:28px;overflow:hidden;margin-bottom:3px;}
+  .price{font-size:12px;font-weight:700;margin-bottom:6px;}
+  .add-btn{width:100%;height:28px;border-radius:6px;background:#fff;border:1px solid var(--ink);
+    font-size:11px;font-weight:600;color:var(--ink);}
+
+  /* OPTION 1 — 칩 + 단일 카루셀 (개인화 카루셀 패턴) */
+  .pers-chips{display:flex;gap:6px;overflow-x:auto;padding:4px 16px 8px;}
+  .pers-chip{flex:0 0 auto;font-size:12px;padding:6px 12px;border-radius:16px;
+    background:var(--chip);color:var(--sub);white-space:nowrap;}
+  .pers-chip.on{background:var(--chipOn);color:#fff;font-weight:600;}
+
+  /* OPTION 2 — 로고 카루셀 */
+  .logo-carousel{display:flex;gap:10px;overflow-x:auto;padding:6px 16px 10px;}
+  .logo-item{flex:0 0 auto;text-align:center;}
+  .logo-circle{width:56px;height:56px;border-radius:50%;background:var(--ph);
+    display:flex;align-items:center;justify-content:center;color:var(--sub);
+    font-size:11px;font-weight:700;margin-bottom:4px;border:1px solid var(--line2);}
+  .logo-circle.on{border:2px solid var(--ink);}
+  .logo-name{font-size:10.5px;color:var(--sub);max-width:64px;}
+
+  /* OPTION 3 — 추천 모듈 모듈 (브랜드별 N행) */
+  .mod-row{padding:14px 0 4px;}
+  .mod-head{padding:0 16px;display:flex;align-items:flex-start;justify-content:space-between;gap:8px;}
+  .mod-head .text{flex:1;min-width:0;}
+  .mod-hook{font-size:11.5px;color:var(--sub);margin-bottom:2px;}
+  .mod-title{font-size:14.5px;font-weight:700;display:flex;align-items:center;gap:6px;}
+  .mod-title .logo-mini{width:18px;height:18px;border-radius:4px;background:var(--ph);
+    display:inline-flex;align-items:center;justify-content:center;font-size:8px;color:var(--sub);}
+  .mod-arrow{font-size:16px;color:var(--sub);padding-top:2px;flex-shrink:0;}
+
+  /* snackbar overlay */
+  .snackbar{position:absolute;left:12px;right:12px;bottom:14px;
+    background:#1f2225;color:#fff;border-radius:10px;padding:10px 12px;
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+    font-size:12.5px;box-shadow:0 6px 24px rgba(0,0,0,.18);}
+  .snackbar .ic{width:20px;height:20px;border-radius:5px;background:#3a3f44;flex-shrink:0;}
+  .snackbar-text{flex:1;}
+  .snackbar-cta{font-weight:700;color:#9fc3ff;font-size:12.5px;white-space:nowrap;}
+
+  /* card detail */
+  .card-detail{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:14px;display:flex;gap:14px;align-items:flex-start;}
+  .card-demo{flex:0 0 168px;}
+  .card-demo .thumb{width:168px;height:168px;}
+  .card-demo .pname{height:auto;font-size:13px;}
+  .card-demo .price{font-size:14px;}
+  .card-detail-text{flex:1;font-size:12.5px;color:#3a3f44;}
+  .card-detail-text h4{font-size:13px;margin:0 0 6px;}
+  .card-detail-text ol{margin:0;padding-left:18px;}
+  .card-detail-text li{margin-bottom:4px;}
+
+  /* annotation */
+  .anno{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:14px;}
+  .anno h3{font-size:13px;margin:0 0 8px;display:flex;align-items:center;gap:7px;}
+  .anno h3 .n{font-size:10px;font-weight:700;background:var(--ink);color:#fff;
+    border-radius:5px;padding:2px 6px;letter-spacing:.03em;}
+  .anno ul{margin:0;padding-left:18px;font-size:12.5px;color:#3a3f44;}
+  .anno li{margin-bottom:5px;}
+  .anno li b{color:var(--ink);}
+  .pill{display:inline-block;font-size:10.5px;font-weight:600;background:var(--chip);
+    color:var(--sub);border-radius:5px;padding:1px 6px;margin:0 1px;}
+  .pill.new{background:var(--accentBg);color:#234a86;}
+  .pill.dec{background:#fdeecf;color:#7a5a08;}
+  .pill.confirm{background:var(--good);color:var(--goodInk);}
+  .pill.drop{background:#f0f2f5;color:var(--sub);text-decoration:line-through;}
+
+  .compare{width:100%;border-collapse:collapse;font-size:12px;}
+  .compare th,.compare td{border:1px solid var(--line2);padding:7px 9px;text-align:left;vertical-align:top;}
+  .compare th{background:var(--note);color:var(--sub);font-weight:600;font-size:11.5px;}
+  .compare td b{color:var(--ink);}
+
+  .footnote{font-size:11.5px;color:var(--sub);margin-top:28px;border-top:1px solid var(--line);padding-top:14px;}
+  .footnote b{color:var(--ink);}
+</style>
+</head>
+<body>
+<div class="page">
+  <h1>Glinda 온보딩 — “인기 브랜드의 패키지 특별가” 섹션<span class="lofi-tag">LO-FI</span><span class="v-tag">v3</span></h1>
+  <div class="meta">
+    PRD <b>온보딩 브랜드 큐레이션 PLP v0.2</b> ([프로젝트] · PO PO + PO/DA · DA PO/DA) · 2026-06-01
+  </div>
+
+  <div class="change-note">
+    <b>PRD v0.2 (2026-05-28) 반영</b> — 카루셀 레이아웃, BUNDLE 모드 단독 스코프, 카드 안 "패키지 담기" 버튼 + 스낵바 패턴, 브랜드 커뮤니케이션 3안 비교, 온보딩 트리거 조건 변경.
+  </div>
+
+  <!-- ===== SECTION 1: 브랜드 커뮤니케이션 3안 비교 ===== -->
+  <p class="section-title">A. 브랜드 커뮤니케이션 3안 비교</p>
+
+  <div class="cols">
+
+    <!-- OPTION 1 — 칩 + 단일 카루셀 -->
+    <div class="col" style="max-width:380px;">
+      <p class="col-label"><span class="opt-tag">OPT 1</span> 칩 + 단일 카루셀</p>
+      <p class="col-sub">개인화 카루셀 패턴 (장바구니 · 스크랩 · 최근 관심처럼 칩으로 분기)</p>
+      <div class="device">
+        <div class="statusbar"><span></span></div>
+        <div class="screen">
+          <div class="ctx"><div class="bar w70"></div><div class="bar w50"></div><div class="hero">온보딩 혜택 영역</div></div>
+          <div class="ctx-cap">↑ 기존 온보딩</div>
+          <div class="divider"></div>
+
+          <div class="sec-head-wrap">
+            <p class="sec-head">인기 브랜드의 패키지 특별가</p>
+            <p class="sec-sub">2개 이상 구매하면 쿠폰가에서 더 할인</p>
+          </div>
+
+          <div class="pers-chips">
+            <div class="pers-chip on">layer</div>
+            <div class="pers-chip">썸앤데코</div>
+            <div class="pers-chip">데일리리빙</div>
+            <div class="pers-chip">이안가구</div>
+            <div class="pers-chip">한샘</div>
+          </div>
+
+          <div class="carousel">
+            <div class="pcard">
+              <div class="thumb">상품</div>
+              <div class="pbrand">layer</div>
+              <div class="pname">호텔 침구 베딩 세트</div>
+              <div class="price">89,000원</div>
+              <button class="add-btn">패키지 담기</button>
+            </div>
+            <div class="pcard">
+              <div class="thumb">상품</div>
+              <div class="pbrand">layer</div>
+              <div class="pname">린넨 커튼 화이트</div>
+              <div class="price">59,000원</div>
+              <button class="add-btn">패키지 담기</button>
+            </div>
+            <div class="pcard peek">
+              <div class="thumb">상품</div>
+              <div class="pbrand">layer</div>
+              <div class="pname">매트리스 프로텍터</div>
+              <div class="price">49,000원</div>
+              <button class="add-btn">패키지 담기</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- OPTION 2 — 로고 카루셀 -->
+    <div class="col" style="max-width:380px;">
+      <p class="col-label"><span class="opt-tag">OPT 2</span> 로고 카루셀</p>
+      <p class="col-sub">브랜드 묶음 할인 로고 카루셀 패턴 (로고로 브랜드 진입 인지)</p>
+      <div class="device">
+        <div class="statusbar"><span></span></div>
+        <div class="screen">
+          <div class="ctx"><div class="bar w70"></div><div class="bar w50"></div><div class="hero">온보딩 혜택 영역</div></div>
+          <div class="ctx-cap">↑ 기존 온보딩</div>
+          <div class="divider"></div>
+
+          <div class="sec-head-wrap">
+            <p class="sec-head">인기 브랜드의 패키지 특별가</p>
+            <p class="sec-sub">2개 이상 구매하면 쿠폰가에서 더 할인</p>
+          </div>
+
+          <div class="logo-carousel">
+            <div class="logo-item"><div class="logo-circle on">L</div><div class="logo-name">layer</div></div>
+            <div class="logo-item"><div class="logo-circle">썸</div><div class="logo-name">썸앤데코</div></div>
+            <div class="logo-item"><div class="logo-circle">데</div><div class="logo-name">데일리리빙</div></div>
+            <div class="logo-item"><div class="logo-circle">이</div><div class="logo-name">이안가구</div></div>
+            <div class="logo-item"><div class="logo-circle">한</div><div class="logo-name">한샘</div></div>
+          </div>
+
+          <div class="carousel">
+            <div class="pcard">
+              <div class="thumb">상품</div>
+              <div class="pbrand">layer</div>
+              <div class="pname">호텔 침구 베딩 세트</div>
+              <div class="price">89,000원</div>
+              <button class="add-btn">패키지 담기</button>
+            </div>
+            <div class="pcard">
+              <div class="thumb">상품</div>
+              <div class="pbrand">layer</div>
+              <div class="pname">린넨 커튼 화이트</div>
+              <div class="price">59,000원</div>
+              <button class="add-btn">패키지 담기</button>
+            </div>
+            <div class="pcard peek">
+              <div class="thumb">상품</div>
+              <div class="pbrand">layer</div>
+              <div class="pname">매트리스 프로텍터</div>
+              <div class="price">49,000원</div>
+              <button class="add-btn">패키지 담기</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- OPTION 3 — 추천 모듈 모듈 (브랜드별 N행) -->
+    <div class="col" style="max-width:380px;">
+      <p class="col-label"><span class="opt-tag">OPT 3</span> 추천 모듈 모듈 패턴 (브랜드별 N행)</p>
+      <p class="col-sub">브랜드 묶음 할인 추천 모듈 모듈 그대로 (clickable 제목 → 브랜드 묶음 할인 상세)</p>
+      <div class="device">
+        <div class="statusbar"><span></span></div>
+        <div class="screen">
+          <div class="ctx"><div class="bar w70"></div><div class="bar w50"></div><div class="hero">온보딩 혜택 영역</div></div>
+          <div class="ctx-cap">↑ 기존 온보딩</div>
+          <div class="divider"></div>
+
+          <div class="sec-head-wrap">
+            <p class="sec-head">인기 브랜드의 패키지 특별가</p>
+          </div>
+
+          <div class="mod-row">
+            <div class="mod-head">
+              <div class="text">
+                <div class="mod-hook">2개 이상 구매하면 쿠폰가에서 더 할인</div>
+                <div class="mod-title"><span class="logo-mini">L</span>오늘의집 layer 브랜드 할인받기</div>
+              </div>
+              <div class="mod-arrow">›</div>
+            </div>
+            <div class="carousel">
+              <div class="pcard"><div class="thumb">상품</div><div class="pbrand">layer</div><div class="pname">호텔 침구 세트</div><div class="price">89,000원</div><button class="add-btn">패키지 담기</button></div>
+              <div class="pcard"><div class="thumb">상품</div><div class="pbrand">layer</div><div class="pname">린넨 커튼</div><div class="price">59,000원</div><button class="add-btn">패키지 담기</button></div>
+              <div class="pcard peek"><div class="thumb">상품</div><div class="pbrand">layer</div><div class="pname">매트리스 프로텍터</div><div class="price">49,000원</div><button class="add-btn">패키지 담기</button></div>
+            </div>
+          </div>
+
+          <div class="mod-row">
+            <div class="mod-head">
+              <div class="text">
+                <div class="mod-hook">2개 이상 구매하면 쿠폰가에서 더 할인</div>
+                <div class="mod-title"><span class="logo-mini">썸</span>썸앤데코 브랜드 할인받기</div>
+              </div>
+              <div class="mod-arrow">›</div>
+            </div>
+            <div class="carousel">
+              <div class="pcard"><div class="thumb">상품</div><div class="pbrand">썸앤데코</div><div class="pname">월넛 침대 Q</div><div class="price">389,000원</div><button class="add-btn">패키지 담기</button></div>
+              <div class="pcard"><div class="thumb">상품</div><div class="pbrand">썸앤데코</div><div class="pname">원목 좌탁</div><div class="price">159,000원</div><button class="add-btn">패키지 담기</button></div>
+              <div class="pcard peek"><div class="thumb">상품</div><div class="pbrand">썸앤데코</div><div class="pname">패브릭 소파</div><div class="price">729,000원</div><button class="add-btn">패키지 담기</button></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 3안 비교 매트릭스 ===== -->
+  <p class="section-title">A-Compare. 3안 비교 매트릭스</p>
+  <div class="anno">
+    <table class="compare">
+      <tr>
+        <th>관점</th>
+        <th>OPT 1 칩 + 단일 카루셀</th>
+        <th>OPT 2 로고 카루셀</th>
+        <th>OPT 3 추천 모듈 모듈 N행</th>
+      </tr>
+      <tr>
+        <td><b>스코프 위계</b></td>
+        <td>한 카루셀 + 칩 분기 — 가장 컴팩트</td>
+        <td>로고 진입 → 상품 카루셀 (2단)</td>
+        <td>브랜드 = 1행, N행 누적 — 가장 길어짐</td>
+      </tr>
+      <tr>
+        <td><b>브랜드 인지</b></td>
+        <td>텍스트 칩 (약함)</td>
+        <td>로고 시각화 (강함)</td>
+        <td>제목 + 작은 로고 (중간)</td>
+      </tr>
+      <tr>
+        <td><b>탐색 효율</b></td>
+        <td>한 화면에서 칩 탭만으로 전환 (빠름)</td>
+        <td>로고 → 카루셀 한 번 더 (중간)</td>
+        <td>스크롤로 자연스럽게 (느림, 우연 발견)</td>
+      </tr>
+      <tr>
+        <td><b>"기존 UI 재활용"</b><br>(PO/DA 요구)</td>
+        <td>개인화 카루셀 컴포넌트 그대로 재활용 (✅)</td>
+        <td>브랜드 묶음 할인 로고 카루셀 컴포넌트 (✅ — 다만 활성도 약함)</td>
+        <td>추천 모듈 모듈 컴포넌트 그대로 재활용 (✅)</td>
+      </tr>
+      <tr>
+        <td><b>[실험키] 데이터 정합</b></td>
+        <td>상품카드 노출 형태 — 데이터 우호적</td>
+        <td>로고 카루셀 단독은 user CTR +N%로 약했음 — <b>약점</b></td>
+        <td>추천 모듈 모듈 user CTR +N% (1위) — <b>강점</b></td>
+      </tr>
+      <tr>
+        <td><b>제목 → 브랜드 묶음 할인 상세 진입</b><br>(U-3 P2)</td>
+        <td>제목 영역 없음 → 진입로 별도 필요</td>
+        <td>로고 탭 → 진입로 만들 수 있음</td>
+        <td>clickable 제목으로 자연스럽게 (✅)</td>
+      </tr>
+      <tr>
+        <td><b>세로 길이 부담</b></td>
+        <td>낮음</td>
+        <td>중간</td>
+        <td>높음 (N행)</td>
+      </tr>
+    </table>
+    <ul style="margin-top:12px;">
+      <li><b>데이터 정합으로는 OPT 3 우세</b> — XPC1901에서 추천 모듈 모듈이 user CTR 4배 우세.</li>
+      <li><b>탐색 효율로는 OPT 1 우세</b> — 온보딩처럼 빠르게 훑는 맥락에 적합.</li>
+      <li><b>브랜드 단독 인지가 중요하면 OPT 2</b> — 다만 로고 카루셀 단독은 데이터상 약했음.</li>
+      <li><b>하이브리드 가능</b>: OPT 3의 모듈 헤더에 <b>OPT 2의 로고를 작게</b> 얹는 형태(=v2 시안) — 두 패턴 결합.</li>
+    </ul>
+  </div>
+
+  <!-- ===== SECTION 2: 카드 + 스낵바 패턴 ===== -->
+  <p class="section-title">B. 카드 인터랙션 — "패키지 담기" 후 스낵바</p>
+
+  <div class="cols">
+    <div class="col" style="max-width:300px;">
+      <p class="col-label">상품 카드 컴포넌트</p>
+      <div class="card-detail">
+        <div class="card-demo">
+          <div class="thumb">상품 이미지</div>
+          <div class="pbrand">layer</div>
+          <div class="pname">호텔 침구 베딩 세트</div>
+          <div class="price">89,000원</div>
+          <button class="add-btn">패키지 담기</button>
+        </div>
+        <div class="card-detail-text">
+          <h4>카드 안 요소</h4>
+          <ol>
+            <li>상품 이미지</li>
+            <li>브랜드명 (작게)</li>
+            <li>상품명 (2줄)</li>
+            <li>가격 <b>(PRD 필수)</b></li>
+            <li><b>"패키지 담기" 버튼</b> (PRD 필수)</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+
+    <div class="col" style="max-width:380px;">
+      <p class="col-label">"패키지 담기" 클릭 후 — 스낵바</p>
+      <div class="device">
+        <div class="statusbar"><span></span></div>
+        <div class="screen" style="min-height:520px;">
+          <div class="ctx"><div class="bar w70"></div><div class="bar w50"></div><div class="hero">온보딩 혜택 영역</div></div>
+          <div class="ctx-cap">↑ 기존 온보딩</div>
+          <div class="divider"></div>
+          <div class="sec-head-wrap"><p class="sec-head">인기 브랜드의 패키지 특별가</p></div>
+          <div class="mod-row">
+            <div class="mod-head">
+              <div class="text">
+                <div class="mod-hook">2개 이상 구매하면 쿠폰가에서 더 할인</div>
+                <div class="mod-title">오늘의집 layer 브랜드 할인받기</div>
+              </div>
+              <div class="mod-arrow">›</div>
+            </div>
+            <div class="carousel">
+              <div class="pcard"><div class="thumb">상품</div><div class="pbrand">layer</div><div class="pname">호텔 침구</div><div class="price">89,000원</div><button class="add-btn">패키지 담기</button></div>
+              <div class="pcard peek"><div class="thumb">상품</div><div class="pbrand">layer</div><div class="pname">린넨 커튼</div><div class="price">59,000원</div><button class="add-btn">패키지 담기</button></div>
+            </div>
+          </div>
+        </div>
+        <div class="snackbar">
+          <span class="ic"></span>
+          <div class="snackbar-text">패키지에 상품을 추가했어요</div>
+          <div class="snackbar-cta">바로가기 ›</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col" style="min-width:300px;">
+      <div class="anno">
+        <h3><span class="n">B1</span> "패키지 담기" 동선</h3>
+        <ul>
+          <li>담고 <b>현재 화면 유지</b> + <b>스낵바</b> 노출.</li>
+          <li>스낵바 카피: <b>"패키지에 상품을 추가했어요"</b> + <b>"바로가기"</b> CTA.</li>
+          <li>"바로가기" 탭 → 패키지빌더로 이동 (수동 진입 경로 유지).</li>
+        </ul>
+      </div>
+      <div class="anno">
+        <h3><span class="n">B2</span> 디자인 검토 항목</h3>
+        <ul>
+          <li>스낵바 노출 위치·duration·dismiss 패턴 (ODS 스낵바 토큰 확인).</li>
+          <li>스낵바 안 아이콘 처리(체크 등 사용 여부).</li>
+          <li>"바로가기" 강조 색상.</li>
+          <li>이미 담긴 상품 카드 상태 표현 (재탭 방지 / 재담기 허용 여부).</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SECTION 3: 주석 / 새 정보 ===== -->
+  <p class="section-title">C. 정책 및 참고</p>
+
+  <div class="cols">
+    <div class="col" style="min-width:320px;">
+      <div class="anno">
+        <h3><span class="n">C1</span> PRD v0.2 주요 정책</h3>
+        <ul>
+          <li>카드 레이아웃 = <b>카루셀</b>.</li>
+          <li>스코프 = <b>BUNDLE</b> 모드 단독 (모드 B·C 후속 검토).</li>
+          <li>"패키지 담기" 동작 = 현재 화면 유지 + 스낵바.</li>
+          <li>카드 구성 = "개인화 카루셀 구성과 동일" (이미지 + 브랜드 + 상품명 + 가격 + 패키지 담기).</li>
+          <li>브랜드 정렬 = "기존 추천 모듈 로직 그대로 따름".</li>
+          <li>User Stories U-1(P0 상품 카드) / U-2(P1 브랜드 묶음 할인 로고) / U-3(P2 상세 페이지 이동).</li>
+        </ul>
+      </div>
+
+      <div class="anno">
+        <h3><span class="n">C2</span> 온보딩 트리거 조건 수정 (PRD 신규 섹션)</h3>
+        <ul>
+          <li>변경: 위시리스트 version 기반 → <b>"패키지 만들기" CTA 클릭 이력 기반</b>.</li>
+          <li><code>has_completed_onboarding = true</code> 조건:
+            <ul>
+              <li>"패키지 만들기" 버튼(<code>go_mypackage</code>) 클릭 시</li>
+              <li><b>상품 카드 클릭 시 ← 우리 섹션</b></li>
+              <li><b>"패키지 담기" 클릭 시 ← 우리 섹션</b></li>
+              <li>그 외 "상품 모듈 관련 영역 클릭" 시 <span class="pill dec">디자인 확정 후 검토</span></li>
+            </ul>
+          </li>
+          <li>함의: 본 섹션 클릭이 <b>온보딩 완료 신호</b>로 카운트됨. 패키지 페이지 진입을 대체하지 않고 *추가 완료 경로*가 됨.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="col" style="min-width:320px;">
+      <div class="anno">
+        <h3><span class="n">C3</span> 디자인 검토 항목</h3>
+        <ul>
+          <li>브랜드 커뮤니케이션 옵션 1 / 2 / 3 중 선택 (A 비교 매트릭스 참고).</li>
+          <li>스낵바 토큰·duration·아이콘·바로가기 강조 (B2 참고).</li>
+          <li>이미 담긴 상품 카드 상태 표현 (재탭 방지 / 재담기 허용).</li>
+          <li>옵션 3 채택 시 모듈 헤더에 작은 로고 노출 여부.</li>
+          <li>옵션 1 채택 시 칩에서 브랜드 묶음 할인 상세 진입로 별도 필요.</li>
+          <li>모듈·카루셀 행 수 상한, 브랜드당 노출 가능 상품 최소 수 (개발 협의).</li>
+        </ul>
+      </div>
+
+      <div class="anno">
+        <h3><span class="n">C4</span> 패키지할인 뱃지 (U-2 / P1)</h3>
+        <ul>
+          <li>PRD에서 P1로 명시: 패키지할인 대상 상품 카드에 <b>패키지할인 뱃지</b> 노출.</li>
+          <li>Figma 참고: <code>node-id=13283-28355</code>.</li>
+          <li>옵션 결정 후 카드 디테일에 뱃지 위치 적용.</li>
+        </ul>
+      </div>
+
+      <div class="anno">
+        <h3><span class="n">C5</span> 엣지 케이스 (PRD E1·E4·E5·E6 유지)</h3>
+        <ul>
+          <li>E-1 노출 가능 브랜드 0 → 섹션 자체 미노출.</li>
+          <li>E-4 담기 불가(품절·단종) → 기존 패키지 담기 에러 동선.</li>
+          <li>E-5 PDP 진입 시 품절·판매중지 → 글린다 PDP 기본 동작.</li>
+          <li>E-6 딥링크/외부 유입 → 동일 bp-cid 분기.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="footnote">
+    <b>참고 자료</b>: PRD v0.2 (2026-05-28) · [실험키] 분석 (브랜드 로고 카루셀 vs 추천 모듈 모듈 user CTR) · 패키지할인 화면 하단 추천 모듈 패턴. ·
+    <b>SSOT</b>: Notion <i>PRD-[Glinda]-[]-온보딩 브랜드 큐레이션 PLP</i>. ·
+    <b>미확정</b>: 실험키 XPC, 모듈·행 수 상한, 브랜드당 최소 상품 수. ·
+    <b>상품·가격·할인율·로고는 더미 데이터입니다.</b>
+  <div style="margin-top:10px;padding:8px 12px;background:#fff8e1;border:1px solid #f0d469;border-radius:6px;font-size:11.5px;color:#7a5a08;">⚠️ 공유용 — 민감 정보 마스킹됨. 카피·색·데이터 더미. 내부 SSOT와 다를 수 있음.</div></div>
+</div>
+</body>
+</html>
