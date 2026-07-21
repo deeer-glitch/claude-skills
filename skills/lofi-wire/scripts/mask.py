@@ -5,7 +5,7 @@ lofi-wire — 마스킹 스크립트.
 출력: {filename}.masked.html (같은 디렉토리)
 
 사용 예:
-  python3 mask.py ~/Downloads/glinda-onboarding-light-structure.html
+  python3 mask.py ~/Downloads/myproject-onboarding-light-structure.html
   python3 mask.py ~/Downloads/foo.html --extra '{"patterns":[{"pattern":"비밀","replace":"[REDACTED]"}]}'
 
 원칙:

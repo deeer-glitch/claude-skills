@@ -23,7 +23,7 @@ PD가 OK 하면 아래 시퀀스. *OK 안 하면 그냥 로컬 파일로 끝.*
 ### [1] 자동 마스킹
 
 ```bash
-python3 ~/.claude/skills/lofi-wire/scripts/mask.py ~/Downloads/{filename}.html
+python3 {스킬 폴더}/scripts/mask.py ~/Downloads/{filename}.html
 ```
 
 - `assets/masking-patterns.json` 규칙 자동 적용
@@ -47,7 +47,7 @@ PD 발화 패턴:
 ### [4] 푸시
 
 ```bash
-bash ~/.claude/skills/lofi-wire/scripts/push.sh ~/Downloads/{filename}.masked.html {project_slug}
+bash {스킬 폴더}/scripts/push.sh ~/Downloads/{filename}.masked.html {project_slug}
 ```
 
 스크립트가:
@@ -65,7 +65,7 @@ bash ~/.claude/skills/lofi-wire/scripts/push.sh ~/Downloads/{filename}.masked.ht
 ## Rollback (PD *"방금 그거 내려"*)
 
 ```bash
-bash ~/.claude/skills/lofi-wire/scripts/unshare.sh {filename or path}
+bash {스킬 폴더}/scripts/unshare.sh {filename or path}
 ```
 
 - 레포에서 `git rm` + 푸시
@@ -75,7 +75,7 @@ bash ~/.claude/skills/lofi-wire/scripts/unshare.sh {filename or path}
 
 `push.sh`가 자동 클론 시도. 클론/설정 파일이 없으면 PD한테:
 > *"공유 레포가 없어요. 처음이라면 셋업 한 번 돌릴게요:*
-> *`bash ~/.claude/skills/lofi-wire/scripts/setup-repo.sh`*
+> *`bash {스킬 폴더}/scripts/setup-repo.sh`*
 > *돌리면 본인 GitHub 계정 아래 레포 생성 + Pages 활성화까지 한 번에. OK 주시면 진행."*
 
 `references/repo-setup.md` 참조.

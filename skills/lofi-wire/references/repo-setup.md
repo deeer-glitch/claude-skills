@@ -5,7 +5,7 @@
 ## 자동 셋업 (권장)
 
 ```bash
-bash ~/.claude/skills/lofi-wire/scripts/setup-repo.sh
+bash {스킬 폴더}/scripts/setup-repo.sh
 ```
 
 스크립트가 하는 일:
@@ -16,7 +16,7 @@ bash ~/.claude/skills/lofi-wire/scripts/setup-repo.sh
 5. README + index.html scaffold
 6. 첫 커밋 + 푸시
 7. GitHub Pages 활성화 (main 브랜치, root)
-8. `~/.claude/skills/lofi-wire/.share-config`에 계정·레포명 저장 (이후 `push.sh`/`unshare.sh`가 읽음)
+8. 스킬 폴더의 `.share-config`에 계정·레포명 저장 (이후 `push.sh`/`unshare.sh`가 읽음)
 
 ## 수동 셋업 (자동이 실패하면)
 
@@ -56,7 +56,7 @@ git push origin main
 
 ### 5. 설정 파일 저장
 ```bash
-cat > ~/.claude/skills/lofi-wire/.share-config <<EOF
+cat > {스킬 폴더}/.share-config <<EOF
 REPO_OWNER={owner}
 REPO_NAME=lofi-wire-share
 EOF

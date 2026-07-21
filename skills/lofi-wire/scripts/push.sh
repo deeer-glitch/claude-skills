@@ -6,7 +6,7 @@
 #   bash push.sh <masked_html_path> <project_slug>
 #
 # 예:
-#   bash push.sh ~/Downloads/glinda-onboarding-light-structure.masked.html glinda
+#   bash push.sh ~/Downloads/myproject-onboarding-light-structure.masked.html myproject
 
 set -euo pipefail
 

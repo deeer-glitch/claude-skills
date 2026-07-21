@@ -18,7 +18,7 @@ description: >
 ## 핵심 원칙
 
 - **차분한 그레이스케일 톤** — Lo-fi라서 색·이미지·카피 디테일은 더미. 구조·정보 위계·인터랙션 분기만 명확.
-- **좌측 컬러 띠 금지** — 어떤 요소에도 `border-left` 액센트 stripe 금지. (본인 개인 메모리에 와이어 스타일 피드백 파일이 있으면 — 예: `~/.claude/memory/work/feedback/feedback_wireframe-style.md` — 자동으로 함께 반영. 없어도 이 룰 자체는 기본 적용.)
+- **좌측 컬러 띠 금지** — 어떤 요소에도 `border-left` 액센트 stripe 금지. (사용자가 와이어 스타일 선호를 메모리·설정 파일로 관리하고 있다면 함께 반영. 없어도 이 룰 자체는 기본 적용.)
 - **컴포넌트 라이브러리 재활용** — 매번 새 CSS 쓰지 말고 `assets/component-library.css`의 클래스를 가져다 쓴다. 일관성·속도 둘 다 위함.
 - **공유 모드는 PD OK 받은 후에만** — 와이어 만든 직후 *"공유 링크로 올릴까요?"* 한 줄 묻고, PD가 명시적으로 OK 해야만 마스킹·푸시 진행. 매번 공유가 필요한 건 아니라서.
 
@@ -43,7 +43,7 @@ description: >
 
 1. **트리거 발화 감지** → 본 스킬 진입
 2. **프로젝트 컨텍스트 자동 로드 (있으면만 — 없어도 OK)**
-   - 본인이 프로젝트별 워크스페이스나 활성 프로젝트 인덱스를 따로 관리하고 있다면(예: `world-state.md` 류의 조감도 문서, 프로젝트별 `current-work.md`/`references.md`) 자동으로 참고해서 PD가 매번 PRD 정보 다시 안 줘도 되게 함
+   - 사용자가 프로젝트별 워크스페이스나 프로젝트 인덱스 문서를 따로 관리하고 있다면 자동으로 참고해서 PD가 매번 PRD 정보 다시 안 줘도 되게 함
    - 그런 워크스페이스가 없으면 그냥 발화에서 받은 정보로 진행
 3. **출력 모드 결정** — 발화에서 추론. 모호하면 한 줄 확인.
 4. **첨부 문서 수집** — PD가 메시지에 PRD URL·Figma URL·Slack 스레드·Jira 키 등 붙였으면 그대로 받음.
@@ -52,13 +52,13 @@ description: >
 7. **섹션 구성** — 자연어로 받음. 예: "KV + 섹션 3개 + Empty 가이드"
 8. **버전 결정** — 같은 prefix(`{project}-{topic}-{kind}`) 기존 파일 있으면 자동 다음 버전. 버전 비교 자동화는 `references/versioning.md`.
 9. **생성** — `assets/component-library.css`를 인라인으로 `<style>` 안에 박고, HTML 작성. `~/Downloads/{project}-{topic}-{kind}{-v?}.html` 저장. 네이밍은 `references/naming.md`.
-10. **렌더링 자동 검증** — `preview_start` (downloads-static 서버) → 페이지 navigate → `preview_screenshot` → PD에게 스크린샷으로 결과 보여줌.
+10. **렌더링 자동 검증** — 로컬 서버(또는 헤드리스 크롬)로 열어 스크린샷 캡처 → PD에게 결과 보여줌. 환경에 프리뷰용 MCP 도구가 있으면 그걸 사용.
 11. **후속 액션 메뉴** (자동 제시):
     - **공유 링크로 올릴까요?** ← 핵심. PD OK 시 공유 모드 진입 (`references/sharing.md`)
-    - **산출물로 프로젝트 문서에 박제할까요?** ← 활성 프로젝트 워크스페이스가 있을 때만
+    - **산출물로 프로젝트 문서에 기록할까요?** ← 프로젝트 워크스페이스를 관리 중일 때만
     - **Figma 컴포넌트 네이밍 추천** (PascalCase: `BundleProductCard`, `ModuleHeader` 등)
     - **다음 버전 안내**
-    - **와이어 세트(여러 상태·화면)를 다 그렸으면**: *"Figma 설계 구조도 이 기준으로 만들까요?"* 제안 — 상태 매트릭스(예: 미충족→구매가능→최대) + 프레임 네이밍(언더바 `U{n}_{멤버}_{상태}_{코드}`) + 비멤버는 변경점 주석으로 대체(화면 미작화) + 같은 상태축 컴포넌트는 한 화면 통합.
+    - **와이어 세트(여러 상태·화면)를 다 그렸으면**: *"Figma 설계 구조도 이 기준으로 만들까요?"* 제안 — 상태 매트릭스(진행 단계별 상태 나열) + 일관된 프레임 네이밍(언더바 `U{n}_{유형}_{상태}_{코드}` 식) + 파생 케이스는 변경점 주석으로 대체(화면 미작화) + 같은 상태축 컴포넌트는 한 화면 통합.
 
 ## 메타데이터 헤더 (모든 와이어 공통)
 
@@ -155,14 +155,14 @@ Rollback: PD *"방금 그거 내려"* 발화 → `scripts/unshare.sh {file}` 실
 
 - **공유 레포** — 각자 자기 GitHub 계정 아래 `lofi-wire-share`를 만든다 (팀 공용 레포 아님). 첫 공유 시도 시 자동 안내되는 `scripts/setup-repo.sh`를 한 번 실행하면 끝.
 - **마스킹 패턴** — `assets/masking-patterns.json`의 `internal_names`(팀 구성원 이름) / `internal_metrics` / `internal_codenames` / `real_prices_from_capture` 카테고리는 본인 프로젝트에 맞게 채워두면 자동 마스킹 정확도가 올라간다. 안 채워도 회사 공통 도메인·Jira 키·이메일 마스킹은 기본 동작.
-- **톤 커스터마이즈** — 본인 개인 메모리에 와이어 시각 스타일이나 카피 톤에 대한 피드백 파일이 있다면(예: `~/.claude/memory/work/feedback/feedback_wireframe-style.md`, `feedback_slack-message-tone.md`) 자동으로 함께 반영된다. 없어도 스킬 기본 룰만으로 정상 동작.
+- **톤 커스터마이즈** — 와이어 시각 스타일이나 카피 톤에 대한 개인 선호를 메모리·설정 파일로 관리하고 있다면 자동으로 함께 반영된다. 없어도 스킬 기본 룰만으로 정상 동작.
 
 ## 첫 사용 시 셋업 (한 번만, 계정별)
 
 `lofi-wire-share` 레포가 없으면 첫 공유 모드 시도 시 자동 셋업 안내:
 
 ```bash
-bash ~/.claude/skills/lofi-wire/scripts/setup-repo.sh
+bash {스킬 폴더}/scripts/setup-repo.sh
 ```
 
 `references/repo-setup.md` 참조. 셋업 한 번 끝나면 이후엔 그냥 푸시만.

@@ -5,8 +5,8 @@
 #   bash unshare.sh <filename or path>
 #
 # 예:
-#   bash unshare.sh glinda/glinda-onboarding-light-structure.html
-#   bash unshare.sh glinda-onboarding-light-structure.html   # 자동 검색
+#   bash unshare.sh myproject/myproject-onboarding-light-structure.html
+#   bash unshare.sh myproject-onboarding-light-structure.html   # 자동 검색
 
 set -euo pipefail
 
