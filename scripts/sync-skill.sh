@@ -14,7 +14,7 @@ PERSONAL="$HOME/claude-skills"
 TEAM_CACHE="$HOME/.cache/ai-skill-sync"
 TEAM_REPO="Ohouse-product-design/AI-Skill"
 # 디어 소유 스킬만 동기화 허용 (팀원 스킬 덮어쓰기 방지 가드)
-MY_SKILLS=(state-verifier spec-policy-handoff design-review user-voice lofi-wire jira-qa-bug wording-check)
+MY_SKILLS=(state-verifier spec-policy-handoff design-review user-voice lofi-wire jira-qa-bug wording-check design-feedback)
 
 SKILL="${1:-}"
 MSG="${2:-}"
