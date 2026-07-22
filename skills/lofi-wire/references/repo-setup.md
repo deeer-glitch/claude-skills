@@ -1,6 +1,6 @@
 # Repo Setup — lofi-wire-share 첫 셋업
 
-공유 모드를 처음 사용할 때 한 번만 실행. 본인 GitHub 계정 아래 개인 공유 레포를 만든다 (팀 공용 레포 아님 — 각자 자기 계정에 만든다).
+공유 모드를 처음 사용할 때 한 번만 실행. `lofi-wire-share` 공유 레포를 만든다. 기본 가시성은 **internal**(사내 org 구성원만 접근) — org 아래 생성 권장: `bash {스킬 폴더}/scripts/setup-repo.sh <org명>`. 사외 공유가 꼭 필요할 때만 `LOFI_SHARE_VISIBILITY=public`으로 옵트인(마스킹 커버리지 재점검 필수).
 
 ## 자동 셋업 (권장)
 
@@ -10,8 +10,8 @@ bash {스킬 폴더}/scripts/setup-repo.sh
 
 스크립트가 하는 일:
 1. `gh auth status` 인증 확인
-2. `gh api user`로 본인 GitHub 계정 자동 감지
-3. `{본인계정}/lofi-wire-share` 공개 레포 생성 (없으면)
+2. 소유자 결정 — 인자(org명)/`LOFI_SHARE_OWNER` 우선, 없으면 `gh api user` 본인 계정
+3. `{owner}/lofi-wire-share` 레포 생성 (없으면. 기본 internal)
 4. 로컬 클론 (`~/Repos/lofi-wire-share/`)
 5. README + index.html scaffold
 6. 첫 커밋 + 푸시
@@ -20,11 +20,11 @@ bash {스킬 폴더}/scripts/setup-repo.sh
 
 ## 수동 셋업 (자동이 실패하면)
 
-아래에서 `{owner}`는 본인 GitHub 계정명으로 치환.
+아래에서 `{owner}`는 사내 org명(권장) 또는 본인 계정명으로 치환. internal 가시성은 org에서만 동작.
 
 ### 1. 레포 생성
 ```bash
-gh repo create {owner}/lofi-wire-share --public \
+gh repo create {owner}/lofi-wire-share --internal \
   --description "Lo-fi 와이어 공유 — 마스킹 적용된 디자인 시안." \
   --add-readme
 ```

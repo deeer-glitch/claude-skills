@@ -85,4 +85,4 @@ bash {스킬 폴더}/scripts/unshare.sh {filename or path}
 - **자동 마스킹 100% 믿지 X.** 새 패턴은 [3]에서 PD가 잡아야 함. 발견되면 `masking-patterns.json` + `masking-rules.md` 둘 다 업데이트.
 - **공유 모드는 발동 안 강제.** 매번 와이어가 공유용은 아니라서. PD가 OK 안 하면 그냥 로컬만.
 - **민감 정보 사고 시 빠르게 unshare.** 그리고 패턴 보강.
-- **공유 레포는 개인 소유.** 팀 공용 레포가 아니라 각자 자기 GitHub 계정 아래 만든다 — 첫 사용자마다 `setup-repo.sh` 한 번씩 실행 필요.
+- **공유 레포는 각자 소유, 기본 internal.** 팀 공용 레포가 아니라 각자 만든다 — 첫 사용자마다 `setup-repo.sh` 한 번씩 실행 필요. 기본 가시성은 internal(사내 org 구성원만 접근)이라 org 아래 생성 권장. 사외 공유가 꼭 필요할 때만 `LOFI_SHARE_VISIBILITY=public` 옵트인 + 마스킹 커버리지 재점검.

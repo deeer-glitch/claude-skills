@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # lofi-wire — 첫 사용 시 공유 레포 셋업.
-# - 본인 GitHub 계정 아래 {계정}/lofi-wire-share 공개 레포 생성
+# 사용법: setup-repo.sh [owner]   (owner 생략 시 본인 계정. 사내 org 권장 — internal 가시성은 org에서만 동작)
+# 환경변수: LOFI_SHARE_VISIBILITY=internal(기본)|private|public
+# - {owner}/lofi-wire-share 레포 생성 (기본 internal — 사내 org 구성원만 접근)
 # - README 추가
 # - main 브랜치 GitHub Pages 활성화
 # - 로컬 클론
@@ -22,22 +24,41 @@ if ! gh auth status >/dev/null 2>&1; then
   exit 1
 fi
 
-# 2) 본인 GitHub 계정 자동 감지
-REPO_OWNER="$(gh api user --jq .login)"
+# 2) 소유자 결정 — 인자/환경변수 우선, 없으면 본인 계정
+REPO_OWNER="${LOFI_SHARE_OWNER:-${1:-}}"
+[[ -z "$REPO_OWNER" ]] && REPO_OWNER="$(gh api user --jq .login)"
 REPO_FULL="${REPO_OWNER}/${REPO_NAME}"
 REPO_DIR="${HOME}/Repos/${REPO_NAME}"
 
-echo "[setup] GitHub 계정: ${REPO_OWNER} → 레포 ${REPO_FULL}"
+# 가시성 — 기본 internal (사내 org 구성원만). public은 명시적 옵트인.
+VISIBILITY="${LOFI_SHARE_VISIBILITY:-internal}"
+case "$VISIBILITY" in internal|private|public) ;; *)
+  echo "[setup] LOFI_SHARE_VISIBILITY는 internal|private|public 중 하나여야 해요: $VISIBILITY" >&2; exit 1;;
+esac
+if [[ "$VISIBILITY" == "public" ]]; then
+  echo "[setup] ⚠️  public 레포 — 와이어가 공개 인터넷에 노출됩니다(검색엔진 인덱싱 가능)."
+  echo "[setup]     사외 공유가 꼭 필요한 경우에만 사용하고, 마스킹 커버리지를 한 번 더 점검하세요."
+fi
+
+echo "[setup] 소유자: ${REPO_OWNER} → 레포 ${REPO_FULL} (${VISIBILITY})"
 
 # 3) 레포 존재 확인 → 없으면 생성
 if gh repo view "$REPO_FULL" >/dev/null 2>&1; then
   echo "[setup] 레포 이미 존재: $REPO_FULL"
 else
   echo "[setup] 레포 생성..."
-  gh repo create "$REPO_FULL" --public \
+  if ! gh repo create "$REPO_FULL" --"$VISIBILITY" \
     --description "Lo-fi 와이어 공유 — 마스킹 적용된 디자인 시안. 내부 SSOT와 다를 수 있음." \
     --add-readme \
-    --confirm
+    --confirm; then
+    echo "[setup] 레포 생성 실패." >&2
+    if [[ "$VISIBILITY" == "internal" ]]; then
+      echo "[setup] internal 가시성은 Enterprise org에서만 가능해요. 사내 org 아래로 만드세요:" >&2
+      echo "[setup]   bash ${BASH_SOURCE[0]} <org명>" >&2
+      echo "[setup] 사외 공유가 꼭 필요한 경우에만: LOFI_SHARE_VISIBILITY=public bash ${BASH_SOURCE[0]}" >&2
+    fi
+    exit 1
+  fi
 fi
 
 # 4) 로컬 클론

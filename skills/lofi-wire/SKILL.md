@@ -1,5 +1,6 @@
 ---
 name: lofi-wire
+allowed-tools: Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion
 description: >
   오늘의집 PD가 디자인 구조 합의·옵션 비교·개념 시각화·핸드오프 전 검토용 Lo-fi 와이어프레임 HTML을
   빠르게 만드는 팀 공용 스킬. 차분한 그레이스케일 톤·정해진 컴포넌트 라이브러리·좌측 컬러 띠 금지 등
@@ -7,7 +8,7 @@ description: >
   "구조 보여줘", "비교 시안", "옵션 비교", "메타포로 설명", "v2 만들어줘", "v3 만들어줘", "/wireframe"이
   나오면 반드시 트리거. PRD·기술요건·Figma 캡처에서 디자인 구조를 빠르게 잡거나, 동료에게 옵션을 비교
   제시하거나, 추상 개념을 그림으로 풀어 설명할 때 사용. 작성 직후 클로드가 *"공유 링크로 올릴까요?"*
-  자동으로 묻고 PD가 OK 시 마스킹 → 미리보기 → 본인 GitHub 계정의 공개 공유 레포 푸시 → URL 반환.
+  자동으로 묻고 PD가 OK 시 마스킹 → 미리보기 → 공유 레포(기본 internal) 푸시 → URL 반환.
   단순 텍스트 답변/슬랙 메시지·일반 코드 작성에는 사용하지 않는다.
 ---
 
@@ -128,7 +129,7 @@ SSOT: ...
 ## 저장 위치
 
 - **로컬 모드 (기본)**: `~/Downloads/{project}-{topic}-{kind}{-v?}.html`
-- **공유 모드**: 로컬 저장 그대로 + 본인 GitHub 계정의 `lofi-wire-share` 레포 `wires/{project}/{filename}`로 푸시
+- **공유 모드**: 로컬 저장 그대로 + `lofi-wire-share` 레포(기본 **internal** — 사내 org 구성원만 접근) `wires/{project}/{filename}`로 푸시
   - 공유 URL: `https://{본인계정}.github.io/lofi-wire-share/wires/{project}/{filename}`
 
 네이밍 규칙: `references/naming.md`.
@@ -153,7 +154,7 @@ Rollback: PD *"방금 그거 내려"* 발화 → `scripts/unshare.sh {file}` 실
 
 이 스킬은 팀 공용이지만, 아래는 각자 셋업이 필요하거나 취향껏 켤 수 있는 부분:
 
-- **공유 레포** — 각자 자기 GitHub 계정 아래 `lofi-wire-share`를 만든다 (팀 공용 레포 아님). 첫 공유 시도 시 자동 안내되는 `scripts/setup-repo.sh`를 한 번 실행하면 끝.
+- **공유 레포** — 각자 `lofi-wire-share`를 만든다 (팀 공용 레포 아님). 기본 가시성은 **internal**(사내 org 구성원만 접근)이며, org 아래 생성을 권장(`bash scripts/setup-repo.sh <org명>`). 사외 공유가 꼭 필요할 때만 `LOFI_SHARE_VISIBILITY=public`으로 명시적 옵트인하고, 그 전에 마스킹 커버리지(개인정보·내부 지표·실가격)를 한 번 더 점검한다.
 - **마스킹 패턴** — `assets/masking-patterns.json`의 `internal_names`(팀 구성원 이름) / `internal_metrics` / `internal_codenames` / `real_prices_from_capture` 카테고리는 본인 프로젝트에 맞게 채워두면 자동 마스킹 정확도가 올라간다. 안 채워도 회사 공통 도메인·Jira 키·이메일 마스킹은 기본 동작.
 - **톤 커스터마이즈** — 와이어 시각 스타일이나 카피 톤에 대한 개인 선호를 메모리·설정 파일로 관리하고 있다면 자동으로 함께 반영된다. 없어도 스킬 기본 룰만으로 정상 동작.
 
