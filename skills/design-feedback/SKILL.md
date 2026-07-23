@@ -73,9 +73,10 @@ SSOT 문서의 4축(노출, 규모, 되돌리기 비용, 수명)으로 레벨을
 | 레벨 | 순회하는 기준 | 아틀라스 로드 |
 |---|---|---|
 | L1 | 1~4 (안전선: 오해 방지, 비가역 보호, 정보 신뢰, 패턴 재사용) | 로드 없이 진행 가능 (인용은 SSOT §4 출처 컬럼) |
-| L2 이상 | 1~9 (+ 과업 완결, 상태 완결, 일관성, 실수 방지·효율, 카피 명확성). AI 프로토타입이면 + 13 비주얼 베이스라인 (오디언스 무관) | **knowledge tier-1 전 문서 로드**: principles, feedback-format, ux-design, ux-writing, visual-design. clauses가 있는 문서(UXW-*, UXD-*)는 조항 단위로 화면과 대조 |
+| L2 이상 | 1~9 (+ 과업 완결, 상태 완결, 일관성, 실수 방지·효율, 카피 명확성). AI 프로토타입이면 + 13 비주얼 베이스라인 (오디언스 무관) | **knowledge 전 문서 로드**: principles, feedback-format, ux-design, ux-writing, visual-design, **design-insight** (인용 원문·severity 가이드·인사이트 #13 엣지 조합·#14 의미 그룹핑 보유). clauses가 있는 문서(UXW-*, UXD-*)는 조항 단위로 화면과 대조 |
+| L3 전환·새 패턴 발명 검토 시 | Composition Order 판단 | + decision-framework (Design 모드 문서. Decision Spec 템플릿 포함) |
 
-**전 문서 로드는 줄이지 않는다 (2026-07-23 디어 지시).** "관련 문서만 골라 로드"로 운영하다 ux-writing 위반 5건(용어집·표기 일관·과장 표현)과 ux-design 위반 2건(reduced-motion, CTA 대비)을 첫 리뷰에서 놓친 사례가 있다. 토큰 절약보다 커버리지가 우선.
+**전 문서 로드는 줄이지 않는다 (2026-07-23 디어 지시).** "관련 문서만 골라 로드"로 운영하다 ux-writing 위반 5건(용어집·표기 일관·과장 표현)과 ux-design 위반 2건(reduced-motion, CTA 대비)을 첫 리뷰에서 놓친 사례가 있다. 토큰 절약보다 커버리지가 우선. 로드는 ohouse-design MCP(list/get_design_knowledge)로, 로컬 클론 불필요.
 | L3 | 1~12 — 단 L3는 design-review로 전환이 원칙 | design-review 워크플로우가 담당 |
 
 **Screen 정책 확인 (고객단 화면, L2 이상)**: 크리틱 전 이 화면이 어느 Track Screen인지 식별하고 ohouse-design MCP get_screen으로 정책을 확인한다. Screen 정책이 최우선 인용 권위. 화면 식별이 안 되면 첫 질문은 "이 화면이 어디인가요?".
