@@ -177,3 +177,11 @@ SSOT 문서의 4축(노출, 규모, 되돌리기 비용, 수명)으로 레벨을
 ```
 
 사례 3~5건 쌓이면 L1/L2 경계 보정을 디어에게 제안. 파일 없으면 헤더와 함께 생성.
+
+---
+
+## 유지보수 (스킬 갱신 루틴)
+
+- 이 스킬에 **지침이 추가·삭제될 때**, 노션 지침 카탈로그에 한 줄 갱신한다: https://app.notion.com/p/3a6a597878a0810a841ee818e44e29ba (지침명 + 핵심 한 줄 + 도출 배경. 문구 수준 변경은 갱신 대상 아님)
+- SSOT는 이 SKILL.md. 노션 카탈로그는 인덱스, 기준 문서(`~/agent-workspace/docs/design-feedback-criteria.md`)와 스냅샷은 종속 문서
+- 동기화: `sync-skill.sh design-feedback "msg" --personal-only` (개인 전용 유지)
