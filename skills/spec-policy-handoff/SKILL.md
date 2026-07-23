@@ -123,6 +123,8 @@ Figma에 직접 달아드릴 수도 있어요.
 
 "Figma에 달아줘", "직접 달아줘" 등 명시적 요청이 있을 때만 실행.
 
+**기존 주석 보호 (필수)**: 기존 annotations는 덮어쓰지 않고 뒤에 추가한다. 사용자가 "기존 주석 교체"를 명시적으로 요청한 경우에만, 교체될 기존 주석 내용을 먼저 보여주고 확인받은 뒤 교체한다.
+
 ```javascript
 var selection = figma.currentPage.selection;
 if (selection.length === 0) {
@@ -133,15 +135,22 @@ if (selection.length === 0) {
 var node = selection[0];
 var specText = "SPEC_TEXT";
 
+// 기존 주석을 유지한 채 뒤에 추가 (덮어쓰기 금지)
+function appendAnnotation(target) {
+  var existing = target.annotations || [];
+  target.annotations = existing.concat([{ label: specText, properties: [] }]);
+  return existing.length;
+}
+
 if ("annotations" in node) {
-  node.annotations = [{ label: specText, properties: [] }];
-  figma.closePlugin("주석 작성 완료: " + node.name + " (" + node.type + ")");
+  var kept = appendAnnotation(node);
+  figma.closePlugin("주석 작성 완료: " + node.name + " (" + node.type + ", 기존 주석 " + kept + "개 유지)");
 } else if (node.type === "GROUP") {
   var parent = node.parent;
   while (parent && !("annotations" in parent)) { parent = parent.parent; }
   if (parent) {
-    parent.annotations = [{ label: specText, properties: [] }];
-    figma.closePlugin("GROUP 미지원 → 부모 [" + parent.name + "]에 작성 완료");
+    var keptParent = appendAnnotation(parent);
+    figma.closePlugin("GROUP 미지원 → 부모 [" + parent.name + "]에 작성 완료 (기존 주석 " + keptParent + "개 유지)");
   } else {
     figma.closePlugin("작성 가능한 부모 노드 없음. 텍스트를 수동으로 붙여넣어주세요.");
   }
