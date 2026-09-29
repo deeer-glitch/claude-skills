@@ -939,13 +939,14 @@ const asis  =       ({ fills: S(black, 0.4), strokes: S(black, 1) });
 기존 과업에서 확정한 언더바 규칙을 따른다. 자세한 건 `~/.claude/memory/work/feedback/feedback_wireframe-style.md`.
 
 ```
-00_스펙보드              페이지마다 하나, 최좌상단
 1.4_주문서_기본          {스펙#}_{화면}_{상태}, 공백 없음
 2.5_배송지_A             택1 비교안은 접미 _A _B _C
 2.10_만료화면_TBD        미결은 접미 _TBD
 1.7_공유_iOS             플랫폼 분기는 접미
 StatusBadge/Wait         컴포넌트만 PascalCase + 슬래시
 ```
+
+**스펙보드 프레임(`00_스펙보드`)은 만들지 않는다** (디어 2026-09-29). 쓰지 않고 지우게 된다. 공통 스펙은 화면 옆 주석과 케이스 표로 전달한다.
 
 ## 함정
 
