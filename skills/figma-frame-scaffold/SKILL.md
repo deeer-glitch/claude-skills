@@ -470,6 +470,19 @@ const crop = (name, x, y, w, h, ix, iy) => {
 - 주석 y는 가리키는 요소의 세로 위치에 맞춘다. 프레임 상단이 아니다
 - 한 프레임에 여러 건이면 **세로로 쌓는다** (실측 3건까지)
 - 주석에서 해당 요소로 **리더 라인**을 긋는다: `VECTOR`, 흰색 60%, 두께 1.5, `strokeCap = "TRIANGLE_FILLED"`
+- 이미 `주석 선`(2px 세로 `RECTANGLE`, 주석 x 에서 20 왼쪽, 텍스트 높이와 같음)을 쓰는 행에서는 그 선을 clone 해서 쓴다. 이때 훅이 리더 누락으로 막으면 코드 첫 줄에 `// ALLOW_NO_LEADER: 이 행은 주석 선을 쓴다` 를 적고 재시도한다
+- **주석 텍스트를 바꿔 높이가 달라지면** 리더 라인 / 주석 선 높이를 텍스트 높이에 맞추고, 아래 주석과 겹치면 24 간격으로 내린다. 마지막에 섹션 겹침 검사를 돌린다:
+
+```js
+const sec = await figma.getNodeByIdAsync("SECTION_ID");
+const kids = sec.children.filter(c => c.visible && c.name !== "Connector line" && !/^밴드|^리더|^주석 선/.test(c.name));
+const pairs = [];
+for (let i = 0; i < kids.length; i++) for (let j = i + 1; j < kids.length; j++) {
+  const p = kids[i].absoluteBoundingBox, q = kids[j].absoluteBoundingBox;
+  if (p.x < q.x + q.width && p.x + p.width > q.x && p.y < q.y + q.height && p.y + p.height > q.y) pairs.push(kids[i].name + " / " + kids[j].name);
+}
+return pairs;   // 화면 위 번호 마커(번호_*)가 프레임과 겹치는 것만 정상
+```
 
 ### 스타일
 
@@ -500,9 +513,14 @@ const crop = (name, x, y, w, h, ix, iy) => {
 | 줄 | 리스트 | 폰트 | 색 | 들여쓰기 |
 |---|---|---|---|---|
 | 제목 | `ORDERED` 또는 `NONE` | Bold | `#00FF40` | 1 |
+| 소제목 (기본 구성 / 선택 및 조회 / CTA 버튼 / 참고 등) | `NONE` | Bold | 흰색 | 0 |
 | 본문 | `UNORDERED` | Regular | 흰색 | 1 |
-| `확인 중(TBD)` | `NONE` | Bold | 흰색 | 1 |
-| TBD 항목 | `UNORDERED` | Regular | 흰색 | 1 |
+| `확인 필요` 또는 `PRD 확인 사항` 제목 | `NONE` | Bold | `#FF4650` (빨강) | 0 |
+| 확인 항목 | `UNORDERED` | Regular | 흰색 | 1 |
+
+소제목 사이는 빈 줄 한 줄. `확인 필요` 묶음은 본문 맨 아래에 두고, 확정되면 묶음째 지운다. 텍스트를 `insertCharacters` 로 넣으면 앞 글자 스타일을 물려받으므로, 넣은 뒤 줄 단위로 `getRangeFontName` / `getRangeListOptions` 를 읽어 위 표와 맞춘다 (2026-09-29 `달 이동` 소제목이 Regular 로 들어간 사고).
+
+**내용 기준은 `~/agent-workspace/templates/annotation-brief.md`, 쓰는 절차는 `~/agent-workspace/shortcuts/annotation-write.md` 가 정본이다.** 주석 문장은 Codex 가 쓰고 이 스킬은 피그마에 넣는 쪽만 맡는다.
 
 ```js
 t.setRangeListOptions(start, end, { type: "UNORDERED" });
@@ -520,10 +538,11 @@ t.setRangeIndentation(start, end, 1);
 
 ### 본문에 적는 것
 
-- **조건과 동작만 적는다.** 디자인 의도나 근거는 적지 않는다. 실측한 항목은 노출 조건, 표시 내용, 버튼 동작, 플랫폼 분기가 전부였다
-- 소제목을 두지 않는다. 항목이 많으면 **주석을 쪼개고 번호를 매긴다**
+- **구성, 문구, 동작만 적는다.** 디자인 의도나 근거는 적지 않는다. 간격, 크기, 색, 폰트처럼 Dev Mode 에서 읽히는 스타일 가이드 정보도 적지 않는다(동작에 영향을 주는 수치만 예외). 2026-09-28 PC 주석에서 스타일 정보를 전부 빼고 모바일 구조에 맞췄다
+- 같은 정의는 한 주석에만 두고 다른 주석에서는 `(2.3 참고)` 처럼 화면 번호로 연결한다
+- 소제목은 평문 한 줄(Bold, 리스트 없음)로 기능 단위마다 둔다. 항목이 아주 많으면 **주석을 쪼개고 번호를 매긴다.** 쪼갠 주석은 화면 위 번호 마커(`번호_2.1_1`, 20x20)와 짝을 맞추고 리더 라인은 두지 않는다
 - 플랫폼이 갈리면 그 줄에서 갈라 적는다 (`iOS 앱 비로그인 사용자:`, `Android 앱은`)
-- **미확정은 맨 아래 `확인 중(TBD)` 블록**에 모은다. 본문에 섞지 않는다
+- **미확정은 맨 아래 `확인 필요` 블록**(제목 빨강)에 모은다. 본문에 섞지 않는다. 확정되면 블록째 지운다
 
 ### 케이스가 많으면 표로 뺀다
 
