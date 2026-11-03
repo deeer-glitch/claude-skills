@@ -996,6 +996,7 @@ StatusBadge/Wait         컴포넌트만 PascalCase + 슬래시
 - **다른 페이지 원본을 쓸 때는 순서가 정해져 있다.** `setCurrentPageAsync` 나 `importComponentSetByKeyAsync` 를 먼저 부르면 그 뒤의 `getNodeByIdAsync` 가 다른 페이지 노드에 대해 `null` 을 돌려준다. 원자적이라 스크립트가 통째로 롤백된다. **① 전 페이지 `loadAsync` → ② 필요한 원본을 전부 변수로 확보 → ③ `setCurrentPageAsync` → ④ 생성과 임포트** 순서로 짠다. 2026-09-22에 이 순서를 틀려 같은 스크립트가 두 번 롤백됐다
 - **예전 핸드오프에 적힌 노드 ID는 쓰기 직전에 다시 조회한다.** 과업이 정리되면서 프레임이 사라져도 문서에는 남는다. 2026-09-22에 02 페이지 `721:5xxxx` 대역이 통째로 없어졌고 같은 화면이 `745:19xxx` 로 남아 있었다. **ID가 아니라 이름으로 찾는 스크립트를 먼저 돌린다**
 - **클론한 노드에서 앵커 문자열을 찾을 때 따옴표를 가정하지 않는다.** `insertCharacters` 앵커로 `"..."` 가 들어간 문장을 썼다가 못 찾았다. 곧은 따옴표와 둥근 따옴표가 섞여 있다. 따옴표를 뺀 조각으로 `indexOf` 한다
+- **이미지는 `use_figma` 안에서 base64로 넣지 않는다.** 2026-10-30에 썸네일 3장을 `figma.createImage(base64)` 로 넣었더니 에러 없이 끝났는데 fill이 비어 있었다. 긴 base64를 스크립트에 싣느라 토큰과 시간도 크게 들어 27분 동안 멈춘 것처럼 보였다. **이미지 노드를 먼저 만들고 `upload_assets` 에 그 nodeId를 넘긴 뒤, 받은 submitUrl마다 파일을 multipart POST로 올린다.** 올린 뒤에는 `get_screenshot` 으로 실제로 이미지가 보이는지 확인한다
 
 ## 연계
 
